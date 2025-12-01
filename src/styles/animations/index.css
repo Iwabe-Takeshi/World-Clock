@@ -1,0 +1,19 @@
+/*
+    In-Animation [Slide-Up]
+*/
+@keyframes Slide-Up {
+    to {
+        transform: translateY(-50%);
+        opacity: 1;
+    }
+}
+
+/*
+    Out-Animation [Slide-Down]
+*/
+@keyframes Slide-Down {
+    to {
+        transform: translateY(-35%);
+        opacity: 0;
+    }
+}

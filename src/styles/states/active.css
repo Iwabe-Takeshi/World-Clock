@@ -1,0 +1,11 @@
+/*
+    Footer > Navigation > Item
+*/
+.foo-nav-i.active span::before {
+    top: -7px;
+    background-color: var(--active-theme-icon-bg-light);
+}
+
+.foo-nav-i.active span svg {
+    fill: var(--active-theme-icon-light);
+}

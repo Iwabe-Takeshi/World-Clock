@@ -1,0 +1,15 @@
+/*
+    Footer > Navigation > Item
+*/
+.foo-nav-i:hover::before {
+    top: -40px;
+    opacity: 1;
+}
+
+.foo-nav-i:hover span::before {
+    top: -7px;
+}
+
+.foo-nav-i:hover span svg {
+    fill: var(--active-theme-icon-light);
+}

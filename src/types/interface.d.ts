@@ -1,0 +1,12 @@
+/* -- ERROR CONSTRUCTOR INTERFACE -- */
+interface ErrorBaseContent<OtherPropertyData extends {} = {}> {
+    Message: string;
+    Context?: {
+        Message: string;
+        EmittedBy: string;
+    },
+    Data?: {
+        Target: string
+    } & OtherPropertyData;
+    Guide: string;
+}

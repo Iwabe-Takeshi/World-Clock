@@ -1,9 +1,13 @@
 /*
     Footer > Navigation > Item
 */
-.foo-nav-i:hover::before {
-    top: -40px;
+.foo-nav-i:not(.active):hover strong {
     opacity: 1;
+}
+
+.foo-nav-i:not(.active):hover span {
+    top: -30px;
+    z-index: 1;
 }
 
 .foo-nav-i:hover span::before {
@@ -11,5 +15,6 @@
 }
 
 .foo-nav-i:hover span svg {
+    transition: fill 250ms 100ms var(--def-cubic);
     fill: var(--active-theme-icon-light);
 }

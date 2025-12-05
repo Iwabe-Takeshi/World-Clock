@@ -28,13 +28,13 @@
   --dark-theme-icon: rgb(200, 200, 200);
 
   /* Icon Active State Colors */
-  --active-theme-icon-bg-light: rgb(100, 100, 100);
+  --active-theme-icon-bg-light: rgb(57, 95, 151);
   --active-theme-icon-bg-dark: rgb(200, 200, 200);
   --active-theme-icon-light: rgb(220, 220, 220);
   --active-theme-icon-dark: rgb(35, 35, 35);
 
   /* Icon Hover State Colors */
-  --hover-theme-icon-bg-light: rgb(120, 120, 120);
+  --hover-theme-icon-bg-light: rgb(100, 100, 100);
 
   /* Border Colors */
   --border-gray: 1px solid rgb(150, 150, 150);

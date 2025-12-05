@@ -1,12 +1,20 @@
 {
   "name": "world-clock",
   "version": "1.0.0",
-  "description": "",
+  "description": "Provides free-based information for current date and time around the world with real-time sync!",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "tw": "tsc --watch"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "author": "Carl Sebastian",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Iwabe-Takeshi/World-Clock.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Iwabe-Takeshi/World-Clock/issues"
+  },
+  "homepage": "https://github.com/Iwabe-Takeshi/World-Clock#readme"
 }

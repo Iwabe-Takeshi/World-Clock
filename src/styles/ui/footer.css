@@ -6,7 +6,7 @@
   position: absolute;
   top: 100%;
   left: 50%;
-  padding: 10px;
+  padding: 15px 10px;
   border-radius: 50px;
   transform: translate(-50%, -100%);
   background-color: rgba(150, 150, 150, 0.2);
@@ -45,12 +45,12 @@
 }
 
 /* > ToolTip */
-.foo-nav-i::before {
+/* .foo-nav-i::before {
     content: attr(tooltip);
     position: absolute;
     width: max-content;
     padding: 5px 10px;
-    top: -20px;
+    top: -15px;
     opacity: 0;
     font-size: 10pt;
     letter-spacing: 1px;
@@ -59,13 +59,15 @@
     background-color: rgb(60, 130, 209);
     transition: top 500ms 200ms var(--def-cubic), opacity 500ms 200ms var(--def-cubic);
     pointer-events: none;
-}
+} */
 
 .foo-nav-i span {
     display: flex;
     position: relative;
     align-items: center;
     justify-content: center;
+    top: 0;
+    transition: top 500ms var(--def-cubic);
 }
 
 .foo-nav-i span::before {
@@ -76,8 +78,8 @@
     width: 45px;
     height: 45px;
     border-radius: 50%;
-    transition: top 400ms var(--def-cubic), background-color 250ms var(--def-cubic);
     pointer-events: none;
+    transition: top 400ms var(--def-cubic), background-color 250ms var(--def-cubic);
     z-index: -1;
 }
 
@@ -86,4 +88,14 @@
     height: 30px;
     fill: var(--light-theme-icon);
     transition: fill 250ms 100ms var(--def-cubic);
+}
+
+.foo-nav-i strong {
+    position: absolute;
+    font-family: "JetBrains Mono";
+    font-weight: normal;
+    font-size: 0.98rem;
+    margin-top: 20px;
+    opacity: 0;
+    transition: opacity 200ms ease-in-out;
 }

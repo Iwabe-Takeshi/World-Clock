@@ -1,8 +1,16 @@
 /**
+ * |--------------------------------------------------|
+ * |                                                  |
+ * |                 Global Variables                 |
+ * |                                                  |
+ * |--------------------------------------------------|
+ */
+
+/**
  * Customize name for application runtime as `window` or `globalThis`.
  */
-var App = window || globalThis;
-export default App as any;
+var Runtime = (window as any || globalThis as any);
+export default Runtime as any;
 
 /**
  * Shorter declaration of `document` or `window.document`.
@@ -15,10 +23,10 @@ var DOM = document || window.document;
     ];
     VarList.forEach(([key, value]) => {
         if (typeof key !== "string" || key.constructor !== String) {
-            WARN("(SKIPPED INVALID KEY):", key);
+            console.warn("(SKIPPED INVALID KEY):", key);
             return;
         }
 
-        (App as any)[key] = value;
+        Runtime[key] = value;
     })
 })();

@@ -7,15 +7,16 @@
  */
 
 /* -- Modules -- */
-import App from "../variables/global.js";
+import Runtime from "../variables/global.js";
 
 /* -- Handler -- */
 /**
- * @
+ * Register an access key to the `@runtime` environment which makes the specified access key to be
+ * accessible throughout the project. This reduce the `@import` for accessing variables or methods.
  */
-function MakeGlobal(accessKey: string | string[], data: any | any[]) {
+function RegisterThis(accessKey: string | string[], data: any | any[]) {
     try {
-        var Emitter = MakeGlobal.name;
+        var Emitter = RegisterThis.name;
         var IsArr = Array.isArray;
 
         /* -- Validations -- */
@@ -42,11 +43,11 @@ function MakeGlobal(accessKey: string | string[], data: any | any[]) {
                 }
 
                 // Store to project runtime.
-                App[key] = data[index]
+                Runtime[key] = data[index]
             });
         else
             // Store to project runtime.
-            App[accessKey] = data;
+            Runtime[accessKey] = data;
 
         /* -- Response Status: SUCCESS -- */
         return true;
@@ -59,4 +60,4 @@ function MakeGlobal(accessKey: string | string[], data: any | any[]) {
 }
 
 /* -- Make RunTime Accessibility Global -- */
-App.MakeGlobal = MakeGlobal;
+Runtime.RegisterThis = RegisterThis;

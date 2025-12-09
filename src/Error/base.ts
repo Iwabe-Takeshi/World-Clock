@@ -6,6 +6,8 @@
  * |--------------------------------------------------|
  */
 
+import Runtime from "../scripts/variables/global.js";
+
 /* -- @Custom: World Clock Error -- */
 /**
  * Customized application `@ErrorConstructor`.
@@ -52,4 +54,5 @@ class WorldClockError<OtherProperties extends {} = {}> extends Error {
     }
 }
 
-export default WorldClockError;
+/* -- @ApplicationCustomErrorConstructor -- */
+Runtime.WorldClockError = WorldClockError;

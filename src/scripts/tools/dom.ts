@@ -9,18 +9,18 @@
 /**
  * Contains retrieval methods for `@DOM` elements.
  */
-export var ELEMENT = {
+export var _Element = {
     /**
      * The root variable name.
      */
     name: "ELEMENT",
-    
+
     /**
      * Returns the first `@DOM` elements that matches the specified `@id`.
      * 
      * @param id - The given unique id of element to retrieve from `@DOM`.
      */
-    ID(id: string): HTMLElement | null {
+    Id(id: string): HTMLElement | null {
         const Emitter = NameOf(Slice(Object.values(this), 1)[0]), Target = "id";
 
         /* -- Validation -- */
@@ -47,7 +47,7 @@ export var ELEMENT = {
      * 
      * @param selector - The specified selector of elements to retrieve from `@DOM`.
      */
-    SELECTOR<T extends keyof HTMLElementTagNameMap>(selector: T): HTMLElementTagNameMap[T] | null {
+    Selector<T extends keyof HTMLElementTagNameMap>(selector: T): HTMLElementTagNameMap[T] | null {
         /* -- Validation -- */
         const Emitter = NameOf(Slice(Object.values(this), 1)[1]), Target = "selector";
         if (!IsString(selector))
@@ -71,7 +71,7 @@ export var ELEMENT = {
      * 
      * @param selector - The specified selector of elements from `@DOM`.
      */
-    SELECTOR_ALL<T extends keyof HTMLElementTagNameMap>(selector: T | string): T extends keyof HTMLElementTagNameMap ? NodeListOf<HTMLElementTagNameMap[T]> : NodeListOf<Element> {
+    SelectorAll<T extends keyof HTMLElementTagNameMap>(selector: T | string): T extends keyof HTMLElementTagNameMap ? NodeListOf<HTMLElementTagNameMap[T]> : NodeListOf<Element> {
         /* -- Validation -- */
         const Emitter = NameOf(Slice(Object.values(this), 1)[2]), Target = "selector";
         if (!IsString(selector))
@@ -95,7 +95,7 @@ export var ELEMENT = {
      * 
      * @param className - The given class name attribute of elements to retrieve from `@DOM`.
      */
-    CLASS(className: string): HTMLCollectionOf<Element> {
+    Class(className: string): HTMLCollectionOf<Element> {
         /* -- Validation -- */
         const Emitter = NameOf(Slice(Object.values(this), 1)[3]), Target = "className";
 
@@ -120,7 +120,7 @@ export var ELEMENT = {
      * 
      * @param tag - The specified tag of elements to retrieve from `@DOM`.
      */
-    TAG<T extends keyof HTMLElementTagNameMap>(tag: T): HTMLCollectionOf<HTMLElementTagNameMap[T]> {
+    Tag<T extends keyof HTMLElementTagNameMap>(tag: T): HTMLCollectionOf<HTMLElementTagNameMap[T]> {
         /* -- Validation -- */
         const Emitter = NameOf(Slice(Object.values(this), 1)[4]), Target = "tag";
 
@@ -145,7 +145,7 @@ export var ELEMENT = {
      * 
      * @param name - The specified name of elements to retrieve from `@DOM`.
      */
-    NAME(name: string): NodeListOf<HTMLElement> {
+    Name(name: string): NodeListOf<HTMLElement> {
         /* -- Validation -- */
         const Emitter = NameOf(Slice(Object.values(this), 1)[5]), Target = "name";
 
@@ -171,7 +171,7 @@ export var ELEMENT = {
      * @param namespaceURI - The namespace URI of elements to retrieve from `@DOM`.
      * @param localName - The local name of elements to retrieve from `@DOM`.
      */
-    TAGNS(namespaceURI: string, localName: string): HTMLCollectionOf<Element> {
+    TagNS(namespaceURI: string, localName: string): HTMLCollectionOf<Element> {
         /* -- Validation -- */
         const Emitter = NameOf(Slice(Object.values(this), 1)[6]), P = [namespaceURI, localName], Targets = ["namespaceURI", "localName"];
 
@@ -198,7 +198,7 @@ export var ELEMENT = {
 /**
  * Contains all CSS-Class manipulation methods.
  */
-export var CLASS = {
+export var Class = {
     /**
      * The root name variable.
      */
@@ -209,8 +209,112 @@ export var CLASS = {
      * 
      * @param element - The specified element to retrieve its class tokens collection.
      */
-    GET(element: HTMLElement) {
-        /* -- Validation -- */
-        const Emitter = NameOf(Slice(Object.values(this), 1)[1]), Target = "element";
+    GetTokensOf(target: Element): DOMTokenList {
+        try {
+            /* -- Validation -- */
+            const Emitter = NameOf(Slice(Object.values(this), 1)[0]), Target = "target";
+
+            if (!IsElement(target))
+                $UnexpectedTypeError(Emitter, Target, GetConstructorOrTypeOf(target), "Element");
+
+            /* -- Result -- */
+            return target.classList;
+        } catch (err) {
+            return [] as any;
+        }
+    },
+
+    /**
+     * Checks the existence of the specified class token from the target `@element` `@DOMTokenList`.
+     * 
+     * @param target - The specified element to check the existence of class token to its `@DOMTokenList`.
+     * @param thisTokens - The specified class token to check.
+     * 
+     * ***Notes***:
+     *  - Accepts multiple class tokens by separating them with coma, and then check if every of the specified
+     *    list of class tokens are existing at target `@element` `@DOMTokenList`.
+     *
+     * @example
+     *  - // [?]: Button element with a class of 'loginBtn'.
+     *    const myBtn = document.getElementById("loginBtn");
+     *    Class.ExistsAt(myBtn, "loginBtn"): true
+     */
+    ExistsAt(target: Element, ...thisTokens: string[]): boolean {
+        try {
+            /* -- Validation -- */
+            const Emitter = NameOf(Slice(Object.values(this), 1)[1]), Targets = ["target", "thisTokens"];
+
+            // [!]: FALSE when parameter @target is invalid.
+            if (!IsElement(target))
+                $UnexpectedTypeError(Emitter, Targets[0], GetConstructorOrTypeOf(target), "Element");
+
+            // [#]: FALSE with warning when there are no class tokens provided.
+            if (LengthOf(thisTokens) === 0) {
+                WARN("Class>ExistsAt(): Expects at least 1 class tokens to validate! (Exited)");
+                return false;
+            }
+
+            /* -- Process -- */
+            return thisTokens.every(token => {
+                // [!]: FALSE when there are non-string as class tokens specified to parameter @thisTokens.
+                if (!IsString(token))
+                    $UnexpectedTypeError(Emitter, `${Targets[1]}['${token}']`, GetConstructorOrTypeOf(token), "String");
+
+                // [?]: Return @token validation result.
+                return this.GetTokensOf(target).contains(token);
+            });
+        } catch (err) {
+            ERROR(`Class>ExistsAt(): Failed to check existence of class token/s! Error: ${err}`);
+            return false;
+        }
+    },
+
+    /**
+     * Adds new specified class token for the specified `@element`.
+    * 
+    * ***Notes***:
+    *  - Accepts multiple class tokens to add by separating them with coma.
+    * 
+    * @param target - The specified element to add/set new class token.
+    * @param newTokens - The specified new class token to add.
+    * 
+    * @throws 
+    *  - An error when parameter `@target` is not provided, or, a warning when parameter `@newTokens` are not provided.
+    * 
+    * @example
+    *  - //* Default Tokens Collection: []
+    *    const myBtn = document.createElement("button");
+    *    //* New Tokens Collection: ["submitBtn"]
+    *    CLASS.ADD(myBtn, "submitBtn"): void
+    */
+    RegisterFrom(target: Element, ...newTokens: string[]): void {
+        try {
+            /* -- Validation -- */
+            const Emitter = NameOf(Slice(Object.values(this), 1)[0]), Targets = ["target", "newTokens"];
+
+            // [!]: Exits when parameter @target is invalid.
+            if (!IsElement(target))
+                $UnexpectedTypeError(Emitter, Targets[0], GetConstructorOrTypeOf(target), "Element");
+
+            // [#]: Exits when there are no new class tokens provided.
+            if (LengthOf(newTokens) === 0) {
+                WARN(`Class>RegisterFrom(@${Targets[1]}: [Empty]): Expects at least 1 or more new class tokens to register! (Exited)`);
+                return;
+            }
+
+            /* -- Process -- */
+            newTokens.forEach(token => {
+                // [!]: Exits when there are non-string value provided as new token item to parameter @newTokens.
+                if (!IsString(token))
+                    $UnexpectedTypeError(Emitter, `${Targets[1]}['${token}']`, GetConstructorOrTypeOf(token), "String");
+
+                // [?]: Only register current token when its still not registered to @DOMTokenList.
+                if (!this.ExistsAt(target, token))
+                    this.GetTokensOf(target).add(token);
+            });
+        } catch (err) {
+            ERROR(`Failed to register a new (list of) token to a target element! Error: ${err}`);
+            return;
+        }
     }
 }

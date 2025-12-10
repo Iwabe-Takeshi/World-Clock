@@ -37,7 +37,7 @@ export function IsNullUndefined(...arg: any[]): boolean {
 export function IsArray(...arg: any[]): boolean {
     if (arg.length === 0 || arg.some(i => IsNullUndefined(i)))
         return false;
-    
+
     return arg.every(i => typeof i === "object" && i.constructor === Array);
 }
 
@@ -170,11 +170,11 @@ export function IsUnknownElement(...arg: any[]): boolean {
 }
 
 /**
- * Returns boolean result whether if the specified data is a function.
+ * Returns boolean result whether if the specified argument is a function.
  * 
  * Note:
  *  - Accepts multiple values by enclosing them with coma, and check if every of the specified 
- *    list of target data are functions.
+ *    list of arguments are functions.
  * 
  * @example
  *  - IsFunc((...) => {...} | function(...) {...}): true |
@@ -185,6 +185,24 @@ export function IsFunc(...arg: any[]): boolean {
         return false;
 
     return arg.every(i => typeof i === "function" && (i.constructor === Function || i instanceof Function));
+}
+
+/**
+ * Returns a boolean result whether if the specified argument is a async function.
+ * 
+ * ***Note***:
+ *  - Accepts multiple values by enclosing them with coma, and check if every of the specified 
+ *    list of arguments are async functions.
+ * 
+ * @example
+ *  - IsAsyncFunc(async () => {...} | async function (...) {...}): true
+ *    IsAsyncFunc(() => {...} | async function (...) {...}): false
+ */
+export function IsAsyncFunc(...arg: any[]): boolean {
+    if (arg.length === 0 || arg.some(i => IsNullUndefined(i)))
+        return false;
+
+    return arg.every(i => i.constructor.name === "AsyncFunction");
 }
 
 /**

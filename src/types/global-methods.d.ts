@@ -396,6 +396,24 @@ declare global {
     function IsFunc(...arg: any[]): boolean;
 
     /**
+     * Returns a `@boolean` result whether if the specified argument is a `@async @function`.
+     * 
+     * @example
+     *  - IsAsyncFunc(async () => {...} | async function (...) {...}): true |
+     *    IsAsyncFunc(() => {...} | "async function (...) {...})"): false
+     */
+    function IsAsyncFunc(arg: any): boolean;
+
+    /**
+     * Returns a `@boolean` result whether if every of the specified list of arguments are `@async @function`.
+     * 
+     * @example
+     *  - IsAsyncFunc(async () => {...}, async function (...) {...}): true |
+     *    IsAsyncFunc(() => {...}, "async function (...) {...})", async () => ...): false
+     */
+    function IsAsyncFunc(...arg: any[]): boolean;
+
+    /**
      * Returns a `@boolean` result whether if the specified argument is `@object`.
      * 
      * @example
@@ -633,11 +651,11 @@ declare global {
     /**
      * Contains `@DOM` elements related processing methods.
      */
-    var ELEMENT: {
+    var _Element: {
         /**
          * The root variable name.
          */
-        name: "ELEMENT"
+        name: "_Element"
 
         /**
          * Returns the first `@DOM` elements that matched the specified unique `@id`.
@@ -649,7 +667,7 @@ declare global {
          * @example
          *  - ELEMENT.ID("myBtn"): HTMLElement
          */
-        ID(id: string): HTMLElement | null;
+        Id(id: string): HTMLElement | null;
 
         /**
          * Returns the first `@DOM` elements that matched the specified `@selector`.
@@ -661,8 +679,8 @@ declare global {
          * @example
          *  - ELEMENT.SELECTOR("button"): HTMLButtonElement 
          */
-        SELECTOR(selector: string): Element | null;
-        SELECTOR<T extends keyof HTMLElementTagNameMap>(selector: T): HTMLElementTagNameMap[T] | null;
+        Selector(selector: string): Element | null;
+        Selector<T extends keyof HTMLElementTagNameMap>(selector: T): HTMLElementTagNameMap[T] | null;
 
         /**
          * Returns a live collection of `@DOM` elements that matches the specified `@selector`.
@@ -674,8 +692,8 @@ declare global {
          * @example
          *  - ELEMENT.SELECTOR_ALL("div"): NodeListOf<HTMLDivElement>
          */
-        SELECTOR_ALL(selector: string): NodeListOf<Element>;
-        SELECTOR_ALL<T extends keyof HTMLElementTagNameMap>(selector: T): NodeListOf<HTMLElementTagNameMap[T]>;
+        SelectorAll(selector: string): NodeListOf<Element>;
+        SelectorAll<T extends keyof HTMLElementTagNameMap>(selector: T): NodeListOf<HTMLElementTagNameMap[T]>;
 
         /**
          * Returns a live collection of `@DOM` elements that matches the specified `@className`.
@@ -687,7 +705,7 @@ declare global {
          * @example
          *  - ELEMENT.CLASS("cards"): HTMLCollectionOf<Element>
          */
-        CLASS(className: string): HTMLCollectionOf<Element>;
+        Class(className: string): HTMLCollectionOf<Element>;
 
         /**
          * Returns a live collection of `@DOM` elements that matches the specified `@tag`.
@@ -699,7 +717,7 @@ declare global {
          * @example
          *  - ELEMENT.TAG("div"): HTMLCollectionOf<HTMLDivElement>
          */
-        TAG<T extends keyof HTMLElementTagNameMap>(tag: T): HTMLCollectionOf<HTMLElementTagNameMap[T]>;
+        Tag<T extends keyof HTMLElementTagNameMap>(tag: T): HTMLCollectionOf<HTMLElementTagNameMap[T]>;
 
         /**
          * Returns a live collection of `@DOM` elements that matches the specified `@name`.
@@ -711,7 +729,7 @@ declare global {
          * @example
          *  - ELEMENT.NAME("fields"): NodeListOf<HTMLElement>
          */
-        NAME(name: string): NodeListOf<HTMLElement>;
+        Name(name: string): NodeListOf<HTMLElement>;
 
         /**
          * Returns a live collection of `@DOM` elements that matches the specified `@namespaceURI` and `@localName`.
@@ -724,7 +742,7 @@ declare global {
          * @example
          *  - ELEMENT.NS("http://www.w3.org/1998/Math/MathML", "annotation"): HTMLCollectionOf<MathMLElement>
          */
-        TAGNS<T extends keyof MathMLElementTagNameMap>(namespaceURI: "http://www.w3.org/1998/Math/MathML", localeName: T): HTMLCollectionOf<T extends MathMLElementTagNameMap ? MathMLElementTagNameMap[T] : MathMLElement>;
+        TagNS<T extends keyof MathMLElementTagNameMap>(namespaceURI: "http://www.w3.org/1998/Math/MathML", localeName: T): HTMLCollectionOf<T extends MathMLElementTagNameMap ? MathMLElementTagNameMap[T] : MathMLElement>;
 
         /**
          * Returns a live collection of `@DOM` elements that matches the specified `@namespaceURI` and `@localName`.
@@ -737,7 +755,7 @@ declare global {
          * @example
          *  - ELEMENT.NS("http://www.w3.org/1999/xhtml", "p"): HTMLCollectionOf<HTMLParagraphElement>
          */
-        TAGNS<T extends keyof HTMLElementTagNameMap>(namespaceURI: "http://www.w3.org/1999/xhtml", localName: T): HTMLCollectionOf<T extends HTMLElementTagNameMap ? HTMLElementTagNameMap[T] : HTMLElement>;
+        TagNS<T extends keyof HTMLElementTagNameMap>(namespaceURI: "http://www.w3.org/1999/xhtml", localName: T): HTMLCollectionOf<T extends HTMLElementTagNameMap ? HTMLElementTagNameMap[T] : HTMLElement>;
 
         /**
          * Returns a live collection of `@DOM` elements that matches the specified `@namespaceURI` and `@localName`.
@@ -750,7 +768,7 @@ declare global {
          * @example
          *  - ELEMENT.NS("http://www.w3.org/2000/svg", "circle"): HTMLCollectionOf<SVGCircleElement>
          */
-        TAGNS<T extends keyof SVGElementTagNameMap>(namespaceURI: "http://www.w3.org/2000/svg", localName: T): HTMLCollectionOf<T extends SVGElementTagNameMap ? SVGElementTagNameMap[T] : SVGElement>;
+        TagNS<T extends keyof SVGElementTagNameMap>(namespaceURI: "http://www.w3.org/2000/svg", localName: T): HTMLCollectionOf<T extends SVGElementTagNameMap ? SVGElementTagNameMap[T] : SVGElement>;
 
         /**
          * Returns a live collection of `@DOM` elements that matches the specified `@namespaceURI` and `@localName`.
@@ -763,22 +781,22 @@ declare global {
          * @example
          *  - ELEMENT.NS("myCustomNameSpace", "myCustomLocalName" | "p"): HTMLCollectionOf<Element>
          */
-        TAGNS<T extends keyof HTMLElementTagNameMap>(namespaceURI: string | null, localName: T | string): HTMLCollectionOf<T extends HTMLElementTagNameMap ? HTMLElementTagNameMap[T] : Element>;
+        TagNS<T extends keyof HTMLElementTagNameMap>(namespaceURI: string | null, localName: T | string): HTMLCollectionOf<T extends HTMLElementTagNameMap ? HTMLElementTagNameMap[T] : Element>;
     };
 
     /**
      * Contains CSS-Class manipulation methods.
      */
-    var CLASS: {
+    var Class: {
         /**
          * The root variable name.
          */
-        name: "CLASS";
+        name: "Class";
 
         /**
          * Returns a live collection of class tokens of the specified `@element`.
          * 
-         * @param element - The specified element to retrieve its live collection of class tokens.
+         * @param target - The specified element to retrieve its live collection of class tokens.
          * 
          * @example
          *  - const myBtn = document.createElement("button");
@@ -789,44 +807,74 @@ declare global {
          *    // Retrieve class tokens.
          *    CLASS.GET(myBtn): ["submitBtn"]
          */
-        GET(element: HTMLElement): string[];
+        GetTokensOf(target: HTMLElement): DOMTokenList;
+
+        /**
+         * Checks the existence of the specified class token from the target `@element` `@DOMTokenList`.
+         * 
+         * @param target - The specified element to check the existence of class token to its `@DOMTokenList`.
+         * @param thisTokens - The specified class token to check.
+         * 
+         * ***Notes***:
+         *  - Accepts multiple class tokens by separating them with coma, and then check if some of the specified
+         *    list of class tokens are exists at target `@element` `@DOMTokenList`.
+         * 
+         * @example
+         *  - // [?]: Button element with a class of 'loginBtn'.
+         *    const myBtn = document.getElementById("loginBtn");
+         *    Class.ExistsAt(myBtn, "loginBtn"): true
+         */
+        ExistsAt(target: Element, thisTokens: string): boolean;
+
+        /**
+         * Checks the existence of the specified list of class tokens from the target `@element` `@DOMTokenList`.
+         * 
+         * @param target - The specified element to check the existence of class token to its `@DOMTokenList`.
+         * @param thisTokens - The specified list of class tokens to check.
+         * 
+         * @example
+         *  - // [?]: Button element with a class of 'loginBtn'.
+         *    const myBtn = document.getElementById("loginBtn");
+         *    Class.ExistsAt(myBtn, "loginBtn"): true
+         */
+        ExistsAt(target: Element, ...thisTokens: string[]): boolean;
 
         /**
          * Adds new specified class token for the specified `@element`.
          * 
          * ***Notes***:
-         *  - Accepts multiple class tokens to add by seperating them with coma.
+         *  - Accepts multiple class tokens to add by separating them with coma.
          * 
-         * @param element - The specified element to add/set new class token.
+         * @param target - The specified element to add/set new class token.
          * @param newTokens - The specified new class token to add.
          * 
          * @throws 
-         *  - An error when parameter `@element` is not provided, or, a warning when parameter `@newTokens` are not provided.
+         *  - An error when parameter `@target` is not provided, or, a warning when parameter `@newTokens` are not provided.
          * 
          * @example
-         *  - // Default Tokens Collection: []
+         *  - // [?]: Default Tokens Collection: []
          *    const myBtn = document.createElement("button");
-         *    // New Tokens Collection: ["submitBtn"]
+         *    // [?]: New Tokens Collection: ["submitBtn"]
          *    CLASS.ADD(myBtn, "submitBtn"): void
          */
-        ADD(element: HTMLElement, newTokens: string): void;
+        RegisterFrom(target: HTMLElement, newTokens: string): void;
 
         /**
          * Adds new specified collection of class tokens for the specified `@element`.
          * 
-         * @param element - The specified element to add/set new collection of class tokens.
+         * @param target - The specified element to add/set new collection of class tokens.
          * @param newTokens - The specified new collection of class tokens.
          * 
          * @throws
-         *  - An error when parameter `@element` is not provided, or, a warning when parameter `@newTokens` are not provided.
+         *  - An error when parameter `@target` is not provided, or, a warning when parameter `@newTokens` are not provided.
          * 
          * @example
-         *  - // Default Tokens Collection: []
+         *  - //* Default Tokens Collection: []
          *    const Card = document.createElement("div");
-         *    // New Tokens Collection: ["card", "fetching"]
+         *    //* New Tokens Collection: ["card", "fetching"]
          *    CLASS.ADD(Card, "card", "fetching");
          */
-        ADD(element: HTMLElement, ...newTokens: string[]): void;
+        RegisterFrom(target: HTMLElement, ...newTokens: string[]): void;
     }
 
     /* ===============|===============|===============|=============== */

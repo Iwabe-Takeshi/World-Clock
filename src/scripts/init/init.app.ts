@@ -2,7 +2,7 @@
 import "../tools/global-access.js";
 import "../tools/index.js";
 import "../index.js";
-import "../../Error/base.js"
+import "../../error/base.js"
 import "./init.global.js";
 import App from "../variables/global.js";
 

@@ -1,7 +1,7 @@
 /* -- Imports -- */
-import "../../Error/base.js";
-import * as Errors from "../../Error/custom.js";
-import * as ErrorBuilders from "../../Error/builder.js";
+import "../../error/base.js";
+import * as Errors from "../../error/custom.js";
+import * as ErrorBuilders from "../../error/builder.js";
 import * as Guards from "../tools/guard.js";
 import * as Tools from "../tools/index.js"
 import * as ArrayTools from "../tools/array.js";

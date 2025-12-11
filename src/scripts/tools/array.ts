@@ -26,11 +26,11 @@
  *  - EachOf([1, 2, 3, 4, 5], n => LOG(n * 2)): 2 4 6 8 10 |
  *    EachOf([1, 2, 3, 4, 5], function (n) { LOG(n * this); }, 2): 2 4 6 8 10
  */
-export function EachOf<T, A>(arr: T[], Do: (value: T, index: number, array: T[]) => void, thisArg?: A) {
+export function EachOf<T, A>(arr: T[], Do: (value: T, index: number, array: T[]) => void, thisArg?: A): void {
     /* -- Validation -- */
     const Emitter = NameOf(EachOf), Targets = ["arr", "Do", "thisArg"];
 
-    // [!]: Exits when parameter @arr or @Do are not provided.
+    // [!]: Exits when parameter @arr or @Do are missing.
     [arr, Do].forEach((val, pos) => {
         if (IsNullUndefined(val))
             $MissingParameterError(Emitter, `${Targets[pos]}${pos > 0 ? `['${val}']` : ""}`, val);
@@ -43,6 +43,10 @@ export function EachOf<T, A>(arr: T[], Do: (value: T, index: number, array: T[])
     // [!]: Exits when parameter @Do is invalid.
     if (!IsFunc(Do) && !IsAsyncFunc(Do))
         $UnexpectedTypeError(Emitter, Targets[1], GetConstructorOrTypeOf(Do), "Function | Async Function");
+
+    // [#]: Warn about possible error when parameter @thisArg is provided but parameter @areThis does not support @this keyword.
+    if (!IsNullUndefined(thisArg) && !(IsFunc(Do) || IsAsyncFunc(Do)))
+        WARN(`EachOf(): Received a method that does not support @this keyword! This could emit an error when @this keyword is called inside of @Do method.`);
 
     /* -- Process -- */
     return !IsNullUndefined(thisArg) ? arr.forEach(Do, thisArg) : arr.forEach(Do);
@@ -73,7 +77,7 @@ export function SomeOf<T, A>(arr: T[], areThis: (value: T, index: number, array:
     /* -- Validation -- */
     const Emitter = NameOf(SomeOf), Targets = ["arr", "areThis", "thisArg"];
 
-    // [!]: Exits when parameter @arr or @areThis are not provided.
+    // [!]: Exits when parameter @arr or @areThis are missing.
     EachOf([arr, areThis], (val, pos) => {
         if (IsNullUndefined(val))
             $MissingParameterError(Emitter, `${Targets[pos]}${pos > 0 ? `['${val}']` : ""}`, val);
@@ -87,12 +91,55 @@ export function SomeOf<T, A>(arr: T[], areThis: (value: T, index: number, array:
     if (!IsFunc(areThis) && !IsAsyncFunc(areThis))
         $UnexpectedTypeError(Emitter, Targets[1], GetConstructorOrTypeOf(areThis), "Function | Async Function");
 
-    // [#]: Might throw an error when parameter `@areThis` does not scope or support `@this` keyword.
+    // [#]: Warn about possible error when parameter @thisArg is provided but parameter @areThis does not support @this keyword.
     if (!IsNullUndefined(thisArg) && !(IsFunc(areThis) || IsAsyncFunc(areThis)))
-        return arr.some(areThis);
+        WARN(`SomeOf(): Received a method that does not support @this keyword! This could emit an error when @this keyword is called inside of @areThis method.`);
 
     /* -- Process -- */
     return !IsNullUndefined(thisArg) ? arr.some(areThis, thisArg) : arr.some(areThis);
+}
+
+/**
+ * Performs the specified method to each of elements from an `@array`, and checks the response of the
+ * performed method as coercible with `@boolean` value `@true`, or exits when the performed method response with
+ * a coercible `@boolean` value `@false`.
+ * 
+ * @param arr - The specified list of elements.
+ * @param areThis - The specified method to perform to each elements of `@array`
+ * @param thisArg 
+ *  - (Optional): A parameter to use or call inside of method `@areThis` as validation reference value to meet.
+ * 
+ * @throws
+ *  - An error when these required parameter `@arr` and `@areThis` are not provided or invalid.
+ * 
+ * @example
+ *  - EveryOf([1, 2, 3, 4, 5], n => (typeof n === "number" || n instanceof Number) && !Number.isNaN(n)): true |
+ *    EveryOf([1, 2, 3, '4', 5], n => (typeof n === "number" || n instanceof Number) && !Number.isNaN(n)): false
+ */
+export function EveryOf<T, A>(arr: T[], areThis: (value: T, index: number, array: T[]) => value is T, thisArg?: A): this is number[] {
+    /* -- Validation -- */
+    const Emitter = NameOf(EveryOf), Targets = ["arr", "areThis", "thisArg"];
+
+    // [!]: Exits when parameter @arr or @areThis are missing.
+    EachOf([arr, areThis], (val, pos) => {
+        if (IsNullUndefined(val))
+            $MissingParameterError(Emitter, `${Targets[pos]}${pos > 0 ? `['${val}']` : ""}`, val);
+    });
+
+    // [!]: Exits when parameter @arr is invalid.
+    if (!IsArray(arr))
+        $UnexpectedTypeError(Emitter, Targets[0], GetConstructorOrTypeOf(arr), "Array");
+
+    // [!]: Exits when parameter @areThis is invalid.
+    if (!IsFunc(areThis) && !IsAsyncFunc(areThis))
+        $UnexpectedTypeError(Emitter, Targets[1], GetConstructorOrTypeOf(areThis), "Function | Async Function");
+
+    // [#]: Warn about possible error when parameter @thisArg is provided but parameter @areThis does not support @this keyword.
+    if (!IsNullUndefined(thisArg) && !(IsFunc(areThis) || IsAsyncFunc(areThis)))
+        WARN(`EveryOf(): Received a method that does not support @this keyword! This could emit an error when @this keyword is called inside of @areThis method.`);
+
+    /* -- Process -- */
+    return !IsNullUndefined(thisArg) ? arr.every(areThis, thisArg) : arr.every(areThis);
 }
 
 /**

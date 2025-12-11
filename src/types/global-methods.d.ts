@@ -799,13 +799,13 @@ declare global {
          * @param target - The specified element to retrieve its live collection of class tokens.
          * 
          * @example
-         *  - const myBtn = document.createElement("button");
+         *  - const myBtn = Create("button");
          *    // Retrieve class tokens.
-         *    CLASS.GET(myBtn): []
+         *    Class.GetTokensOf(myBtn); -> DOMTokenList: []
          *    // Add new class item token.
-         *    CLASS.ADD(myBtn, "submitBtn");
+         *    Class.AddFrom(myBtn, "submitBtn"); -> DOMTokenList: ["submitBtn"]
          *    // Retrieve class tokens.
-         *    CLASS.GET(myBtn): ["submitBtn"]
+         *    Class.GetTokensOf(myBtn); -> DOMTokenList: ["submitBtn"]
          */
         GetTokensOf(target: HTMLElement): DOMTokenList;
 
@@ -821,8 +821,8 @@ declare global {
          * 
          * @example
          *  - // [?]: Button element with a class of 'loginBtn'.
-         *    const myBtn = document.getElementById("loginBtn");
-         *    Class.ExistsAt(myBtn, "loginBtn"): true
+         *    const myBtn = Element.Id("loginBtn");
+         *    Class.ExistsAt(myBtn, "loginBtn"); -> true
          */
         ExistsAt(target: Element, thisTokens: string): boolean;
 
@@ -834,8 +834,8 @@ declare global {
          * 
          * @example
          *  - // [?]: Button element with a class of 'loginBtn'.
-         *    const myBtn = document.getElementById("loginBtn");
-         *    Class.ExistsAt(myBtn, "loginBtn"): true
+         *    const myBtn = Element.Id("loginBtn");
+         *    Class.ExistsAt(myBtn, "loginBtn"); -> true
          */
         ExistsAt(target: Element, ...thisTokens: string[]): boolean;
 
@@ -853,11 +853,11 @@ declare global {
          * 
          * @example
          *  - // [?]: Default Tokens Collection: []
-         *    const myBtn = document.createElement("button");
+         *    const myBtn = Create("button");
          *    // [?]: New Tokens Collection: ["submitBtn"]
-         *    CLASS.ADD(myBtn, "submitBtn"): void
+         *    Class.AddFrom(myBtn, "submitBtn");
          */
-        RegisterFrom(target: HTMLElement, newTokens: string): void;
+        AddFrom(target: HTMLElement, newTokens: string): void;
 
         /**
          * Adds new specified collection of class tokens for the specified `@element`.
@@ -870,11 +870,31 @@ declare global {
          * 
          * @example
          *  - //* Default Tokens Collection: []
-         *    const Card = document.createElement("div");
+         *    const Card = Create("div");
          *    //* New Tokens Collection: ["card", "fetching"]
-         *    CLASS.ADD(Card, "card", "fetching");
+         *    Class.AddFrom(Card, "card", "fetching");
          */
-        RegisterFrom(target: HTMLElement, ...newTokens: string[]): void;
+        AddFrom(target: HTMLElement, ...newTokens: string[]): void;
+
+        /**
+         * Removes the specified class token from the target `@element`.
+         * 
+         * ***Note***:
+         *  - Accepts multiple class tokens to add by separating them with coma.
+         * 
+         * @param target - The specified element to add/set new class token.
+         * @param thisTokens - The specified class token to remove.
+         * 
+         * @throws
+         *  - An error when parameter `@target` is not provided, or, a warning when parameter `@thisTokens` are not provided.
+         * 
+         * @example
+         *  - // Button with class of 'submitBtn', and 'login'.
+         *    const myBtn = Element.Class('submitBtn')[0]; // BEFORE: DOMTokenList: ["submitBtn", "login"]
+         *    // Removing class 'login' to button element.
+         *    Class.RemoveFrom(myBtn, "login"); // AFTER: DOMTokenList: ["submitBtn"]
+         */
+        RemoveFrom(target: Element, ...thisTokens: string[]): void
     }
 
     /* ===============|===============|===============|=============== */
@@ -886,6 +906,71 @@ declare global {
      * |                                                  |
      * |--------------------------------------------------|
      */
+
+    /**
+     * Performs a method to each elements of the specified `@array`. This method will perform the specified
+     * `@Do` method for each elements.
+     * 
+     * ***Note***:
+     *  - When parameter `@thisArg` is provided, parameter `@Do` required to be a non-anonymous function.
+     *    (E.g. Starts with 'function' keyword)
+     * 
+     * @param arr - The specified list of elements.
+     * @param Do - The specified method to perform to each elements of `@array`.
+     * @param thisArg
+     *  - (Optional): A parameter to use or call inside of method `@Do` as reference value that might have been used in some parts.
+     * 
+     * @throws
+     *  - An error when these required parameter `@arr` and `@Do` are not provided or invalid.
+     * 
+     * @example
+     *  - EachOf([1, 2, 3, 4, 5], n => LOG(n * 2)): 2 4 6 8 10 |
+     *    EachOf([1, 2, 3, 4, 5], function (n) { LOG(n * this); }, 2): 2 4 6 8 10
+     */
+    function EachOf<T, A>(arr: T[], Do: (value: T, index: number, array: T[]) => void, thisArg?: A): void;
+
+    /**
+     * Performs a method to each elements of the specified `@array`. This method will perform the specified
+     * `@areThis` method to validate each elements, until it returns a result that coercible with `@Boolean` 
+     * value true, or else, perform until the last element from `@array`.
+     * 
+     * ***Note***:
+     *  - When parameter `@thisArg` is provided, parameter `@areThis` required to be a non-anonymous function.
+     *    (E.g. Starts with 'function' keyword)
+     * 
+     * @param arr - The specified list of elements.
+     * @param areThis - The specified method to perform to each elements of `@array`.
+     * @param thisArg 
+     *  - (Optional): A parameter to use or call inside of method `@areThis` as validation reference value to meet.
+     * 
+     * @throws
+     *  - An error when these required parameter `@arr` and `@areThis` are not provided or invalid.
+     * 
+     * @example
+     *  - SomeOf([1, 2, undefined, 5, 'd'], item => IsString(item)): true |
+     *    SomeOf([1, 2, undefined, 5, 'd'], function ())
+     */
+    function SomeOf<T, A>(arr: T[], areThis: (value: T, index: number, array: T[]) => unknown, thisArg?: A): boolean
+
+    /**
+     * Performs the specified method to each of elements from an `@array`, and checks the response of the
+     * performed method as coercible with `@boolean` value `@true`, or exits when the performed method response with
+     * a coercible `@boolean` value `@false`.
+     * 
+     * @param arr - The specified list of elements.
+     * @param areThis - The specified method to perform to each elements of `@array`
+     * @param thisArg 
+     *  - (Optional): A parameter to use or call inside of method `@areThis` as validation reference value to meet.
+     * 
+     * @throws
+     *  - An error when these required parameter `@arr` and `@areThis` are not provided or invalid.
+     * 
+     * @example
+     *  - EveryOf([1, 2, 3, 4, 5], n => (typeof n === "number" || n instanceof Number) && !Number.isNaN(n)): true |
+     *    EveryOf([1, 2, 3, '4', 5], n => (typeof n === "number" || n instanceof Number) && !Number.isNaN(n)): false
+     */
+    function EveryOf<T, A>(arr: T[], areThis: (value: T, index: number, array: T[]) => boolean, thisArg?: A): this is T[];
+    function EveryOf<T, A>(arr: T[], areThis: (value: T, index: number, array: T[]) => boolean, thisArg?: A): boolean;
 
     /**
      * Returns a sliced collection of array elements from the specified `@arr` with the specified `@start` index position.

@@ -4,7 +4,7 @@ import "../tools/index.js";
 import "../index.js";
 import "../../error/base.js"
 import "./init.global.js";
-import App from "../variables/global.js";
+import RunTime from "../variables/global.js";
 
 /**
  * Starts the `@application` initialization process.
@@ -18,4 +18,4 @@ function InitApp() {
 }
 
 /* -- @ApplicationInitializationProcess -- */
-App.InitApp = InitApp;
+RunTime.InitApp = InitApp;

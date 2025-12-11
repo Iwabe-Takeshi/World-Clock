@@ -1,16 +1,18 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "esnext",
+    "module": "nodenext",
     "moduleDetection": "force",
-    "moduleResolution": "bundler",
+    "moduleResolution": "nodenext",
     "resolveJsonModule": true,
     "outDir": "app",
     "rootDir": "src",
     "lib": ["ESNext", "DOM"],
     "strict": true,
     "checkJs": true,
-    "allowJs": true
+    "allowJs": true,
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
   },
   "include": ["src", "src/types/*.d.ts"]
 }

@@ -13,7 +13,7 @@ export var _Element = {
     /**
      * The root variable name.
      */
-    name: "ELEMENT",
+    name: "_Element",
 
     /**
      * Returns the first `@DOM` elements that matches the specified `@id`.
@@ -36,7 +36,7 @@ export var _Element = {
 
         // Notify for not-found element.
         if (IsNullUndefined(result))
-            WARN(`ELEMENT>ID(): There's no associated element found with an id of '${id}'!`);
+            WARN(`Element>Id(): There's no associated element found with an id of '${id}'!`);
 
         /* -- Result -- */
         return result;
@@ -60,7 +60,7 @@ export var _Element = {
         const result = DOM.querySelector(selector);
 
         if (IsNullUndefined(result))
-            WARN(`ELEMENT>SELECTOR(): There's no associated element found with a selector of '${selector}'!`);
+            WARN(`Element>Selector(): There's no associated element found with a selector of '${selector}'!`);
 
         /* -- Result -- */
         return result;
@@ -84,7 +84,7 @@ export var _Element = {
         const result = DOM.querySelectorAll(selector) as T extends keyof HTMLElementTagNameMap ? NodeListOf<HTMLElementTagNameMap[T]> : NodeListOf<Element>;
 
         if (LengthOf(result) <= 0)
-            WARN(`ELEMENT>SELECTOR_ALL(): There's no associated element found with a selector of '${selector}'!`);
+            WARN(`Element>SelectorAll(): There's no associated element found with a selector of '${selector}'!`);
 
         /* -- Result -- */
         return result;
@@ -109,7 +109,7 @@ export var _Element = {
         const result = DOM.getElementsByClassName(className);
 
         if (LengthOf(result) <= 0)
-            WARN(`ELEMENT>CLASS(): There's no elements found with a given class of '${className}'!`);
+            WARN(`Element>Class(): There's no elements found with a given class of '${className}'!`);
 
         /* -- Result -- */
         return result;
@@ -134,7 +134,7 @@ export var _Element = {
         const result = DOM.getElementsByTagName(tag);
 
         if (LengthOf(result) <= 0)
-            WARN(`ELEMENTS>TAG(): There's no elements found with specified tag of '${tag}'!`);
+            WARN(`Element>Tag(): There's no elements found with specified tag of '${tag}'!`);
 
         /* -- Result -- */
         return result;
@@ -159,7 +159,7 @@ export var _Element = {
         const result = DOM.getElementsByName(name);
 
         if (LengthOf(result) <= 0)
-            WARN(`ELEMENT>NAME(): There's no elements found with specified name of '${name}'!`);
+            WARN(`Element>Name(): There's no elements found with specified name of '${name}'!`);
 
         /* -- Result -- */
         return result;
@@ -176,7 +176,7 @@ export var _Element = {
         const Emitter = NameOf(Slice(Object.values(this), 1)[6]), P = [namespaceURI, localName], Targets = ["namespaceURI", "localName"];
 
         // Both parameter must be a string and not empty.
-        P.forEach((t, i) => {
+        EachOf(P, (t, i) => {
             if (!IsString(t))
                 $UnexpectedTypeError(Emitter, Targets[i], GetConstructorOrTypeOf(t), "string");
 
@@ -188,7 +188,7 @@ export var _Element = {
         const result = DOM.getElementsByTagNameNS(P[0], P[1]);
 
         if (LengthOf(result) <= 0)
-            WARN(`ELEMENT>TAGNS(): There are no elements found with the specified @namespaceURI: '${P[0]}' and @localName: '${P[1]}'!`);
+            WARN(`Element>TagNS(): There are no elements found with the specified @namespaceURI: '${P[0]}' and @localName: '${P[1]}'!`);
 
         /* -- Result -- */
         return result;
@@ -202,24 +202,35 @@ export var Class = {
     /**
      * The root name variable.
      */
-    name: "CLASS",
+    name: "Class",
 
     /**
-     * Returns a live collection of class tokens from the specified element.
+     * Returns a live collection of class tokens of the specified `@element`.
      * 
-     * @param element - The specified element to retrieve its class tokens collection.
+     * @param target - The specified element to retrieve its live collection of class tokens.
+     * 
+     * @example
+     *  - const myBtn = Create("button");
+     *    // Retrieve class tokens.
+     *    Class.GetTokensOf(myBtn); -> DOMTokenList: []
+     *    // Add new class item token.
+     *    Class.AddFrom(myBtn, "submitBtn"); -> DOMTokenList: ["submitBtn"]
+     *    // Retrieve class tokens.
+     *    Class.GetTokensOf(myBtn); -> DOMTokenList: ["submitBtn"]
      */
     GetTokensOf(target: Element): DOMTokenList {
         try {
             /* -- Validation -- */
             const Emitter = NameOf(Slice(Object.values(this), 1)[0]), Target = "target";
 
+            // [!]: Exits when parameter @target is invalid.
             if (!IsElement(target))
                 $UnexpectedTypeError(Emitter, Target, GetConstructorOrTypeOf(target), "Element");
 
             /* -- Result -- */
             return target.classList;
         } catch (err) {
+            ERROR(`Class>GetTokensOf(): Failed to retrieve @DOMTokenList of target element! Error: ${err}`);
             return [] as any;
         }
     },
@@ -231,13 +242,13 @@ export var Class = {
      * @param thisTokens - The specified class token to check.
      * 
      * ***Notes***:
-     *  - Accepts multiple class tokens by separating them with coma, and then check if every of the specified
-     *    list of class tokens are existing at target `@element` `@DOMTokenList`.
-     *
+     *  - Accepts multiple class tokens by separating them with coma, and then check if some of the specified
+     *    list of class tokens are exists at target `@element` `@DOMTokenList`.
+     * 
      * @example
      *  - // [?]: Button element with a class of 'loginBtn'.
-     *    const myBtn = document.getElementById("loginBtn");
-     *    Class.ExistsAt(myBtn, "loginBtn"): true
+     *    const myBtn = Element.Id("loginBtn");
+     *    Class.ExistsAt(myBtn, "loginBtn"); -> true
      */
     ExistsAt(target: Element, ...thisTokens: string[]): boolean {
         try {
@@ -250,12 +261,12 @@ export var Class = {
 
             // [#]: FALSE with warning when there are no class tokens provided.
             if (LengthOf(thisTokens) === 0) {
-                WARN("Class>ExistsAt(): Expects at least 1 class tokens to validate! (Exited)");
+                WARN(`Class>ExistsAt(@${Targets[1]}: [empty]): Expects at least 1 class tokens to validate! (Exited)`);
                 return false;
             }
 
             /* -- Process -- */
-            return thisTokens.every(token => {
+            return EveryOf(thisTokens, token => {
                 // [!]: FALSE when there are non-string as class tokens specified to parameter @thisTokens.
                 if (!IsString(token))
                     $UnexpectedTypeError(Emitter, `${Targets[1]}['${token}']`, GetConstructorOrTypeOf(token), "String");
@@ -264,6 +275,7 @@ export var Class = {
                 return this.GetTokensOf(target).contains(token);
             });
         } catch (err) {
+            LOG(Object.values(err as {}));
             ERROR(`Class>ExistsAt(): Failed to check existence of class token/s! Error: ${err}`);
             return false;
         }
@@ -271,40 +283,40 @@ export var Class = {
 
     /**
      * Adds new specified class token for the specified `@element`.
-    * 
-    * ***Notes***:
-    *  - Accepts multiple class tokens to add by separating them with coma.
-    * 
-    * @param target - The specified element to add/set new class token.
-    * @param newTokens - The specified new class token to add.
-    * 
-    * @throws 
-    *  - An error when parameter `@target` is not provided, or, a warning when parameter `@newTokens` are not provided.
-    * 
-    * @example
-    *  - //* Default Tokens Collection: []
-    *    const myBtn = document.createElement("button");
-    *    //* New Tokens Collection: ["submitBtn"]
-    *    CLASS.ADD(myBtn, "submitBtn"): void
-    */
-    RegisterFrom(target: Element, ...newTokens: string[]): void {
+     * 
+     * ***Notes***:
+     *  - Accepts multiple class tokens to add by separating them with coma.
+     * 
+     * @param target - The specified element to add/set new class token.
+     * @param newTokens - The specified new class token to add.
+     * 
+     * @throws 
+     *  - An error when parameter `@target` is not provided, or, a warning when parameter `@newTokens` are not provided.
+     * 
+     * @example
+     *  - // [?]: Default Tokens Collection: []
+     *    const myBtn = Create("button");
+     *    // [?]: New Tokens Collection: ["submitBtn"]
+     *    Class.AddFrom(myBtn, "submitBtn");
+     */
+    AddFrom(target: Element, ...newTokens: string[]): void {
         try {
             /* -- Validation -- */
-            const Emitter = NameOf(Slice(Object.values(this), 1)[0]), Targets = ["target", "newTokens"];
+            const Emitter = NameOf(Slice(Object.values(this), 1)[2]), Targets = ["target", "newTokens"];
 
             // [!]: Exits when parameter @target is invalid.
             if (!IsElement(target))
                 $UnexpectedTypeError(Emitter, Targets[0], GetConstructorOrTypeOf(target), "Element");
 
-            // [#]: Exits when there are no new class tokens provided.
+            // [#]: Exits and warn when there are no new class tokens provided.
             if (LengthOf(newTokens) === 0) {
-                WARN(`Class>RegisterFrom(@${Targets[1]}: [Empty]): Expects at least 1 or more new class tokens to register! (Exited)`);
+                WARN(`Class>AddFrom(@${Targets[1]}: [Empty]): Expects at least 1 or more new class tokens to register! (Exited)`);
                 return;
             }
 
             /* -- Process -- */
-            newTokens.forEach(token => {
-                // [!]: Exits when there are non-string value provided as new token item to parameter @newTokens.
+            EachOf(newTokens, token => {
+                // [!]: Exits when there are non-string type value provided as new token item to parameter @newTokens.
                 if (!IsString(token))
                     $UnexpectedTypeError(Emitter, `${Targets[1]}['${token}']`, GetConstructorOrTypeOf(token), "String");
 
@@ -313,8 +325,54 @@ export var Class = {
                     this.GetTokensOf(target).add(token);
             });
         } catch (err) {
-            ERROR(`Failed to register a new (list of) token to a target element! Error: ${err}`);
+            ERROR(`Failed to register a new (list of) token(s) to a target element! Error: ${err}`);
             return;
         }
+    },
+
+    /**
+     * Removes the specified class token from the target `@element`.
+     * 
+     * ***Note***:
+     *  - Accepts multiple class tokens to add by separating them with coma.
+     * 
+     * @param target - The specified element to add/set new class token.
+     * @param thisTokens - The specified class token to remove.
+     * 
+     * @throws
+     *  - An error when parameter `@target` is not provided, or, a warning when parameter `@thisTokens` are not provided.
+     * 
+     * @example
+     *  - // Button with class of 'submitBtn', and 'login'.
+     *    const myBtn = Element.Class('submitBtn')[0]; // BEFORE: DOMTokenList: ["submitBtn", "login"]
+     *    // Removing class 'login' to button element.
+     *    Class.RemoveFrom(myBtn, "login"); // AFTER: DOMTokenList: ["submitBtn"]
+     */
+    RemoveFrom(target: Element, ...thisTokens: string[]): void {
+        /* -- Validation -- */
+        const Emitter = NameOf(Slice(Object.values(this), 1)[3]), Targets = ["target", "thisTokens"];
+
+        // [!]: Exits when parameter @target is invalid.
+        if (!IsElement(target))
+            $UnexpectedTypeError(Emitter, Targets[0], GetConstructorOrTypeOf(target), "Element");
+
+        // [#]: Exits and warn when there are no class tokens provided.
+        if (LengthOf(thisTokens) === 0) {
+            WARN(`Class>RemoveFrom(@${Targets[1]}: [empty]): Expects at least 1 or more class tokens to remove! (Exited)`);
+            return;
+        }
+
+        /* -- Process -- */
+        EachOf(thisTokens, token => {
+            // [!]: Exits when there are non-string type value provided as class token to remove from @thisTokens.
+            if (!IsString(token))
+                $UnexpectedTypeError(Emitter, `${Targets[1]}['${token}']`, GetConstructorOrTypeOf(token), "String");
+
+            // [?]: Only remove current token when its still existing @target element's to @DOMTokenList.
+            if (this.ExistsAt(target, token))
+                this.GetTokensOf(target).remove(token);
+
+            LOG(this.GetTokensOf(target).value);
+        });
     }
 }

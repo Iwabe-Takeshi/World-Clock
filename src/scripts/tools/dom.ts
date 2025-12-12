@@ -371,8 +371,64 @@ export var Class = {
             // [?]: Only remove current token when its still existing @target element's to @DOMTokenList.
             if (this.ExistsAt(target, token))
                 this.GetTokensOf(target).remove(token);
-
-            LOG(this.GetTokensOf(target).value);
         });
+    },
+
+    /**
+     * Toggle the specified class token from the target `@element` with an option to force its toggle state
+     * by provided a `@boolean` status value ('@true' or '@false') at parameter `@force`.
+     * 
+     * ***States***:
+     *  - **FALSE**: Removes the specified class token if exists at the specified target element, and return '@false'.
+     *    **TRUE**: Adds the specified class token if not exists at the specified target element, and return '@true'.
+     * 
+     * @param target - The specified target element to toggle class with.
+     * @param thisToken - The specified class token to toggle state.
+     * @param force - (Optional): A force status to apply as toggle state of the specified class token.
+     * 
+     * @throws
+     *  - An error when parameter `@target` or `@thisToken` are not provided or invalid.
+     * 
+     * @example
+     *  - // [?]: A button with class names.
+     *    const myBtn = Create("button", { ClassNames: ["submitBtn", "login", "disabled"] }); -> HTMLButtonElement: DOMTokenList -> ["submitBtn", "login", "disabled"]
+     *    // [?]: Toggle the state of class token 'disabled' into false, and removed from the DOMTokenList of button element.
+     *    Class.ToggleFrom(myBtn, "disabled"); -> DOMTokenList: ["submitBtn", "login"]
+     *    // [?]: Always ensure class token 'disabled' exists at button element.
+     *    Class.ToggleFrom(myBtn, "disabled", true); -> DOMTokenList: ["submitBtn", "login", "disabled"]
+     */
+    ToggleFrom(target: Element, thisToken: string, force?: boolean): boolean {
+        /* -- Validation -- */
+        const Emitter = NameOf(Slice(Object.values(this), 1)[4]), Targets = ["target", "thisToken", "force"];
+
+        // [?]: Validating parameter @target and @thisToken.
+        EachOf([target, thisToken], (val, pos) => {
+            // [!]: Exits when parameter @target or @thisToken is not provided.
+            if (IsNullUndefined(val))
+                $MissingParameterError(Emitter, Targets[pos], val);
+
+            // [!]: Exits when parameter @target is invalid.
+            if (pos === 0 && !IsElement(target))
+                $UnexpectedTypeError(Emitter, Targets[0], GetConstructorOrTypeOf(target), "Element");
+
+            // [!]: Exits when parameter @thisToken is invalid.
+            if (pos > 0 && !IsString(thisToken))
+                $UnexpectedTypeError(Emitter, Targets[1], GetConstructorOrTypeOf(thisToken), "String");
+        });
+
+        // [#]: Warns when @thisToken is an empty-string.
+        if (IsEmptyStr(thisToken)) {
+            WARN(`Class>ToggleFrom(@${Targets[1]}: ''): Expects a non-empty string. (Exited)`);
+            return false;
+        }
+
+        /* -- Process & Result -- */
+        const Tokens = this.GetTokensOf(target);
+
+        // [#]: Warns when @force is not a valid boolean value. (@force will not be used.)
+        if (force && !IsBool(force))
+            return Tokens.toggle(thisToken);
+
+        return IsBool(force) ? Tokens.toggle(thisToken, force) : Tokens.toggle(thisToken);
     }
 }

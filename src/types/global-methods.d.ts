@@ -64,6 +64,9 @@ declare global {
      * 
      * @param accessKey - A key for accessing your custom methods, errors, or variables at your project's runtime.
      * @param data - A associated data of the specified key at `accessKey`.
+     * 
+     * @example
+     *  - RegisterThis("Sum", (a, b) => a + b); -> true
      */
     function RegisterThis(accessKey: string, data: any): boolean;
 
@@ -83,6 +86,9 @@ declare global {
      * 
      * @param accessKey - A list of key for accessing your custom methods, errors, or variables at your project's runtime.
      * @param data - A associated list of data of the specified keys at `accessKey`.
+     * 
+     * @example
+     *  - RegisterThis(["Sum", "Subtract"], [(a, b) => a + b, (a, b) => a - b]); -> true
      */
     function RegisterThis(accessKey: string[], data: any[]): boolean;
 
@@ -100,6 +106,9 @@ declare global {
      * Retrieves the `@constructor` of specified argument or else `@type`.
      * 
      * @param arg - The specified argument value or data to retrieve its constructor or type.
+     * 
+     * @example
+     *  - GetConstructorOrTypeOf("Some Text"); -> "String"
      */
     function GetConstructorOrTypeOf(arg: any): string;
 
@@ -117,8 +126,8 @@ declare global {
      * @throws **`false`** as default response when parameter `@arg` or `@searchThisKey` are not provided. 
      * 
      * @example
-     *  - In("Some Text", "length"): true
-     *    In("Some Text", "name"): false
+     *  - In("Some Text", "length"); -> true
+     *    In("Some Text", "name"); -> false
      */
     function In(arg?: any, searchThisKey?: string): boolean;
 
@@ -131,7 +140,7 @@ declare global {
      * @throws **`false`** as default response when parameter `@arg` or `@searchThisKey` ar not provided.
      * 
      * @example
-     *  - In("Some Text", "length", "substring", "trim", "name"): { Supported: ["length", "substring", "trim"], NotSupported: ["name"] }
+     *  - In("Some Text", "length", "substring", "trim", "name"); -> { Supported: ["length", "substring", "trim"], NotSupported: ["name"] }
      */
     function In(arg: any, ...searchThisKey: string[]): { Supported: string[], NotSupported: string[] };
 
@@ -155,7 +164,7 @@ declare global {
      * @param arg - The specified argument to retrieve its `@length` property value.
      * 
      * @example
-     *  - Length([1, 2, 3]): 3
+     *  - Length([1, 2, 3]); -> 3
      */
     function LengthOf(arg: any): number;
 
@@ -169,7 +178,7 @@ declare global {
      * @param arg - The specified argument to retrieve its `@size` property value.
      * 
      * @example
-     *  - SizeOf(new Map([[...], [...]])): 2
+     *  - SizeOf(new Map([[...], [...]])); -> 2
      */
     function SizeOf(arg: any): number;
 
@@ -204,8 +213,8 @@ declare global {
      *  - A number value '0' as invalid response, when any of the parameters are not a valid number.
      * 
      * @example
-     *  - Clamp(-13, 0, 5): 0 |
-     *    Clamp(10, 0, 5): 5
+     *  - Clamp(-13, 0, 5); -> 0
+     *    Clamp(10, 0, 5); -> 5
      */
     function Clamp(val: number, min: number, max: number): number;
 
@@ -309,8 +318,8 @@ declare global {
      * Returns a `@boolean` result whether if the specified argument is an `@array`.
      * 
      * @example
-     *  - IsArray([1, 2, 3, ...]): true |
-     *    IsArray("[1, 2, 3, ...]"): false
+     *  - IsArray([1, 2, 3, ...]); -> true
+     *    IsArray("[1, 2, 3, ...]"); -> false
      */
     function IsArray(arg: any): arg is any[];
 
@@ -318,8 +327,8 @@ declare global {
      * Returns a `@boolean` result whether if every of the specified list of arguments are `@arrays`.
      * 
      * @example
-     *  - IsArray([1, 2, 3, ...], ['a', '', 'b', 'e', ...]): true |
-     *    IsArray([1, 2, 3, ...], undefined, true, ['a', 'b', ...]): false
+     *  - IsArray([1, 2, 3, ...], ['a', '', 'b', 'e', ...]); -> true
+     *    IsArray([1, 2, 3, ...], undefined, true, ['a', 'b', ...]); -> false
      */
     function IsArray(...arg: any[]): boolean;
 
@@ -327,8 +336,8 @@ declare global {
      * Returns a `@boolean` result whether if the specified argument is `@null` or `@undefined`.
      * 
      * @example
-     *  - IsNullUndefined(undefined | null): true |
-     *    IsNullUndefined("undefined" | "null"): false
+     *  - IsNullUndefined(undefined | null); -> true
+     *    IsNullUndefined("undefined" | "null"); -> false
      */
     function IsNullUndefined(arg: any): boolean;
 
@@ -336,8 +345,8 @@ declare global {
      * Returns a `@boolean` result whether if some of the specified list of arguments are `@null` or `@undefined`.
      * 
      * @example
-     *  - IsNullUndefined(1, 'a', 'c', null, undefined): true
-     *    IsNullUndefined(1, 3, 10.4, 'd', 'some text'): false
+     *  - IsNullUndefined(1, 'a', 'c', null, undefined); -> true
+     *    IsNullUndefined(1, 3, 10.4, 'd', 'some text'); -> false
      */
     function IsNullUndefined(...arg: any[]): boolean;
 
@@ -345,8 +354,8 @@ declare global {
      * Returns a `@boolean` result whether if the specified argument is `@string`.
      * 
      * @example
-     *  - IsString("Some Text"): true |
-     *    IsString(["Some Text"] | undefined): false
+     *  - IsString("Some Text"); -> true
+     *    IsString(["Some Text"] | undefined); -> false
      */
     function IsString(arg: any): arg is string;
 
@@ -354,8 +363,8 @@ declare global {
      * Returns a `@boolean` result whether if every of the specified list of arguments are `@strings`.
      * 
      * @example
-     *  - IsString("Some Text", "Hello", ...): true |
-     *    IsString("Some Text", true, ...): false
+     *  - IsString("Some Text", "Hello", ...); -> true
+     *    IsString("Some Text", true, ...); -> false
      */
     function IsString(...arg: any[]): boolean;
 
@@ -363,8 +372,8 @@ declare global {
      * Returns a `@boolean` result whether if the specified argument is an `@emptyString`.
      * 
      * @example
-     *  - IsEmptyStr("" | '' | ``): true |
-     *    IsEmptyStr("Some text" | 'a' | `Some text ...`): false
+     *  - IsEmptyStr("" | '' | ``); -> true
+     *    IsEmptyStr("Some text" | 'a' | `Some text ...`); -> false
      */
     function IsEmptyStr(str: string): boolean;
 
@@ -372,8 +381,8 @@ declare global {
      * Returns a `@boolean` result whether if some of the specified list of arguments are `@emptyString`.
      * 
      * @example
-     *  - IsEmptyStr("Some text", 'a', ``): true
-     *    IsEmptyStr("Some text", 'a', `Some text ...`): false
+     *  - IsEmptyStr("Some text", 'a', ``); -> true
+     *    IsEmptyStr("Some text", 'a', `Some text ...`); -> false
      */
     function IsEmptyStr(...str: string[]): boolean;
 
@@ -381,8 +390,8 @@ declare global {
      * Returns a `@boolean` result whether if the specified argument is a `@function`.
      * 
      * @example
-     *  - IsFunc(() => {...} | function myFunc() {...}): true |
-     *    IsFunc("() => {...}"): false
+     *  - IsFunc(() => {...} | function myFunc() {...}); -> true
+     *    IsFunc("() => {...}"); -> false
      */
     function IsFunc(arg: any): arg is Function;
 
@@ -390,8 +399,8 @@ declare global {
      * Returns a `@boolean` result whether if every of the specified list of arguments are `@functions`.
      * 
      * @example
-     *  - IsFunc(() => {...}, function (...) {...}, function myFunc() {...}): true |
-     *    IsFunc("() => {...}", function (...) {...}, "function myFunc() {...}"): false
+     *  - IsFunc(() => {...}, function (...) {...}, function myFunc() {...}); -> true
+     *    IsFunc("() => {...}", function (...) {...}, "function myFunc() {...}"); -> false
      */
     function IsFunc(...arg: any[]): boolean;
 
@@ -399,8 +408,8 @@ declare global {
      * Returns a `@boolean` result whether if the specified argument is a `@async @function`.
      * 
      * @example
-     *  - IsAsyncFunc(async () => {...} | async function (...) {...}): true |
-     *    IsAsyncFunc(() => {...} | "async function (...) {...})"): false
+     *  - IsAsyncFunc(async () => {...} | async function (...) {...}); -> true
+     *    IsAsyncFunc(() => {...} | "async function (...) {...})"); -> false
      */
     function IsAsyncFunc(arg: any): boolean;
 
@@ -408,8 +417,8 @@ declare global {
      * Returns a `@boolean` result whether if every of the specified list of arguments are `@async @function`.
      * 
      * @example
-     *  - IsAsyncFunc(async () => {...}, async function (...) {...}): true |
-     *    IsAsyncFunc(() => {...}, "async function (...) {...})", async () => ...): false
+     *  - IsAsyncFunc(async () => {...}, async function (...) {...}); -> true
+     *    IsAsyncFunc(() => {...}, "async function (...) {...})", async () => ...); -> false
      */
     function IsAsyncFunc(...arg: any[]): boolean;
 
@@ -417,8 +426,8 @@ declare global {
      * Returns a `@boolean` result whether if the specified argument is `@object`.
      * 
      * @example
-     *  - IsPlainObj({ "val": 24 }): true |
-     *    IsPlainObj("{ 'val': 24 }"): false
+     *  - IsPlainObj({ "val": 24 }); -> true
+     *    IsPlainObj("{ 'val': 24 }"); -> false
      */
     function IsObj(arg: any): arg is object;
 
@@ -426,8 +435,8 @@ declare global {
      * Returns a `@boolean` result whether if every of the specified list of arguments are `@object`.
      * 
      * @example
-     *  - IsPlainObj({}, {...}, { "val": 1 }): true
-     *    IsPlainObj({}, "{...}", null, ...): false
+     *  - IsPlainObj({}, {...}, { "val": 1 }); -> true
+     *    IsPlainObj({}, "{...}", null, ...); -> false
      */
     function IsObj(...arg: any[]): boolean;
 
@@ -435,8 +444,8 @@ declare global {
      * Returns a `@boolean` result whether if the specified argument is `@node`.
      * 
      * @example
-     *  - IsNode(document.getElementsByTagName("body")): true |
-     *    IsNode("document.getElementsByTagName("body")"): false
+     *  - IsNode(document.getElementsByTagName("body")); -> true
+     *    IsNode("document.getElementsByTagName("body")"); -> false
      */
     function IsNode(arg: any): arg is Node;
 
@@ -444,8 +453,8 @@ declare global {
      * Returns a `@boolean` result whether if every of the specified list of arguments is `@nodes`.
      * 
      * @example
-     *  - IsNode(document.getElementsByTagName("body")[0], new Node()): true |
-     *    IsNode("document.getElementsByTagName('body')", new Node()): false
+     *  - IsNode(document.getElementsByTagName("body")[0], new Node()); -> true
+     *    IsNode("document.getElementsByTagName('body')", new Node()); -> false
      */
     function IsNode(...arg: any[]): boolean;
 
@@ -453,8 +462,8 @@ declare global {
      * Returns a `@boolean` result whether if the specified argument is an `@element`.
      * 
      * @example
-     *  - IsElement(document.createElement(...)): true |
-     *    IsElement(document.getElementsByTagName("body")[0].childNodes): false
+     *  - IsElement(document.createElement(...)); -> true
+     *    IsElement(document.getElementsByTagName("body")[0].childNodes); -> false
      */
     function IsElement(arg: any): arg is Element;
 
@@ -462,8 +471,8 @@ declare global {
      * Returns a `@boolean` result whether if every of the specified list of arguments is an `@elements`.
      * 
      * @example
-     *  - IsElement(document.createElement(...), document.getElementsByTagName("body")[0]): true |
-     *    IsElement(document.createElement(...), document.getElementsByTagName("body")[0].childNodes): false
+     *  - IsElement(document.createElement(...), document.getElementsByTagName("body")[0]); -> true
+     *    IsElement(document.createElement(...), document.getElementsByTagName("body")[0].childNodes); -> false
      */
     function IsElement(...arg: any[]): boolean;
 
@@ -475,8 +484,8 @@ declare global {
      *    all `@elements` including `@SVG`.
      * 
      * @example
-     *  - IsHTMLElement(document.createElement("span")): true |
-     *    IsHTMLElement(document.createElementNS(...)): false
+     *  - IsHTMLElement(document.createElement("span")); -> true
+     *    IsHTMLElement(document.createElementNS(...)); -> false
      */
     function IsHTMLElement(arg: any): arg is HTMLElement;
 
@@ -488,8 +497,8 @@ declare global {
      *    all `@elements` including `@SVG`.
      * 
      * @example
-     *  - IsHTMLElement(document.createElement("span"), document.getElementById(...)): true |
-     *    IsHTMLElement(document.createElement("span"), document.createElementNS(...)): false
+     *  - IsHTMLElement(document.createElement("span"), document.getElementById(...)); -> true
+     *    IsHTMLElement(document.createElement("span"), document.createElementNS(...)); -> false
      */
     function IsHTMLElement(...arg: any[]): boolean;
 
@@ -497,8 +506,8 @@ declare global {
      * Returns a `@boolean` result whether if the specified argument is an `@unknownHTMLElement`.
      * 
      * @example
-     *  - IsUnknownElement(document.createElement("spa")): true |
-     *    IsUnknownElement(document.createElement("span")): false
+     *  - IsUnknownElement(document.createElement("spa")); -> true
+     *    IsUnknownElement(document.createElement("span")); -> false
      */
     function IsUnknownElement(arg: any): arg is HTMLUnknownElement;
 
@@ -506,25 +515,17 @@ declare global {
      * Returns a `@boolean` result whether if some of the specified list of arguments is an `@unknownHTMLElement`.
      * 
      * @example
-     *  - IsUnknownElement(document.createElement("spa"), document.createElement("dib")): true |
-     *    IsUnknownElement(document.createElement("span"), document.createElement("div")): false
+     *  - IsUnknownElement(document.createElement("spa"), document.createElement("dib")); -> true
+     *    IsUnknownElement(document.createElement("span"), document.createElement("div")); -> false
      */
     function IsUnknownElement(...arg: any[]): boolean;
-    /**
-     * Returns a `@boolean` result whether if every of the specified list of arguments have or supports `@length` property.
-     * 
-     * @example
-     *  - HaveLengthProp([1, 2, 3], "Some text", Object.values({...})): true |
-     *    HaveLengthProp([1, 2, 3], { d: "Some Text", ...}, undefined): false
-     */
-    function HaveLengthProp(...arg: any[]): boolean;
 
     /**
      * Returns a `@boolean` result whether if the specified argument is a `@map` objects.
      * 
      * @example
-     *  - IsMap(new Map([["data", {...}], ["nums", [...]]])): true |
-     *    IsMap([["data", {...}], ["nums", [...]]]): false
+     *  - IsMap(new Map([["data", {...}], ["nums", [...]]])); -> true
+     *    IsMap([["data", {...}], ["nums", [...]]]); -> false
      */
     function IsMap(arg: any): arg is Map<any, any>;
 
@@ -532,8 +533,8 @@ declare global {
      * Returns a `@boolean` result whether if every of the specified list of arguments are `@map` objects.
      * 
      * @example
-     *  - IsMap(new Map([]), new Map([[...], [...], ...])): true |
-     *    IsMap([], [[...], [...], ...]): false
+     *  - IsMap(new Map([]), new Map([[...], [...], ...])); -> true
+     *    IsMap([], [[...], [...], ...]); -> false
      */
     function IsMap(...arg: any[]): boolean;
 
@@ -541,8 +542,8 @@ declare global {
      * Returns a `@boolean` result whether if the specified argument is a `@set` objects.
      * 
      * @example
-     *  - IsSet(new Set([{ "data-set": [...], ...}])): true |
-     *    IsSet([{ "data-set": [...], ...}]): false
+     *  - IsSet(new Set([{ "data-set": [...], ...}])); -> true
+     *    IsSet([{ "data-set": [...], ...}]); -> false
      */
     function IsSet(arg: any): arg is Set<any>;
 
@@ -550,8 +551,8 @@ declare global {
      * Returns a `@boolean` result whether if every of the specified list of arguments are `@set` objects.
      * 
      * @example
-     *  - IsSet(new Set([...]), new Set([{ data: [...], ...}])): true |
-     *    IsSet([...], new Set([{ data: [...], ...}])): false
+     *  - IsSet(new Set([...]), new Set([{ data: [...], ...}])); -> true
+     *    IsSet([...], new Set([{ data: [...], ...}])); -> false
      */
     function IsSet(...arg: any[]): boolean;
 
@@ -562,22 +563,40 @@ declare global {
      *  - This would not treat a `@NaN` or ***Not-a-Number*** value as a valid `@number`.
      * 
      * @example
-     *  - IsNum(1): true |
-     *    IsNum("1"): false
+     *  - IsNum(1); -> true
+     *    IsNum("1"); -> false
      */
     function IsNum(arg: any): arg is number;
 
     /**
-     * Returns a `@boolean` result whether if the specified list of arguments are `@numbers`.
+     * Returns a `@boolean` result whether if every of the specified list of arguments are `@numbers`.
      * 
      * ***Note***:
     *  - This would not treat a `@NaN` or ***Not-a-Number*** value as a valid `@number`.
     * 
      * @example
-     *  - IsNum(1, 2, 3, 4, 5): true |
-     *    IsNum(parseInt("one"): NaN, 2, 3, 4, "5"): false
+     *  - IsNum(1, 2, 3, 4, 5); -> true
+     *    IsNum(parseInt("one"): NaN, 2, 3, 4, "5"); -> false
      */
     function IsNum(...arg: any[]): boolean;
+
+    /**
+     * Returns a `@boolean` result whether if the specified argument is a `@boolean`.
+     * 
+     * @example
+     *  - IsBool(true | false); -> true
+     *    IsBool("true" | "false"); -> false
+     */
+    function IsBool(arg: any): arg is boolean;
+
+    /**
+     * Returns a `@boolean result whether if every of the specified list of arguments are `@booleans`.
+     * 
+     * @example
+     *  - IsBool(true, false, false); -> true
+     *    IsBool("true", 0, false); -> false
+     */
+    function IsBool(...arg: any[]): boolean;
 
     /* ===============|===============|===============|=============== */
 
@@ -665,7 +684,7 @@ declare global {
          * @throws a warning when there's no `@element` found with the specified unique `@id`.
          * 
          * @example
-         *  - ELEMENT.ID("myBtn"): HTMLElement
+         *  - Element.Id("myBtn"); -> HTMLElement
          */
         Id(id: string): HTMLElement | null;
 
@@ -677,7 +696,7 @@ declare global {
          * @throws a warning when there's no `@element` found with the specified `@selector`.
          * 
          * @example
-         *  - ELEMENT.SELECTOR("button"): HTMLButtonElement 
+         *  - Element.Selector("button"); -> HTMLButtonElement 
          */
         Selector(selector: string): Element | null;
         Selector<T extends keyof HTMLElementTagNameMap>(selector: T): HTMLElementTagNameMap[T] | null;
@@ -690,7 +709,7 @@ declare global {
          * @throws a warning when there's no any or at least 1 of `@element` found with the specified `@selector`. 
          * 
          * @example
-         *  - ELEMENT.SELECTOR_ALL("div"): NodeListOf<HTMLDivElement>
+         *  - Element.SelectorAll("div"); -> NodeListOf<HTMLDivElement>
          */
         SelectorAll(selector: string): NodeListOf<Element>;
         SelectorAll<T extends keyof HTMLElementTagNameMap>(selector: T): NodeListOf<HTMLElementTagNameMap[T]>;
@@ -703,7 +722,7 @@ declare global {
          * @throws a warning when there's no any or at least 1 of `@element` found with the specified `@className`.
          * 
          * @example
-         *  - ELEMENT.CLASS("cards"): HTMLCollectionOf<Element>
+         *  - Element.Class("cards"); -> HTMLCollectionOf<Element>
          */
         Class(className: string): HTMLCollectionOf<Element>;
 
@@ -715,7 +734,7 @@ declare global {
          * @throws a warning when there's no any or at least 1 of `@elements` found with the specified `@tag`.
          * 
          * @example
-         *  - ELEMENT.TAG("div"): HTMLCollectionOf<HTMLDivElement>
+         *  - Element.Tag("div"); -> HTMLCollectionOf<HTMLDivElement>
          */
         Tag<T extends keyof HTMLElementTagNameMap>(tag: T): HTMLCollectionOf<HTMLElementTagNameMap[T]>;
 
@@ -727,7 +746,7 @@ declare global {
          * @throws a warning when there's no any or at least 1 of `@elements` found with the specified `@name`.
          * 
          * @example
-         *  - ELEMENT.NAME("fields"): NodeListOf<HTMLElement>
+         *  - Element.Name("fields"); -> NodeListOf<HTMLElement>
          */
         Name(name: string): NodeListOf<HTMLElement>;
 
@@ -740,7 +759,7 @@ declare global {
          * @throws a warning when there's no any or at least 1 of `@elements` found with the specified `@namespaceURI` and `@localName`.
          * 
          * @example
-         *  - ELEMENT.NS("http://www.w3.org/1998/Math/MathML", "annotation"): HTMLCollectionOf<MathMLElement>
+         *  - Element.TagNS("http://www.w3.org/1998/Math/MathML", "annotation"); -> HTMLCollectionOf<MathMLElement>
          */
         TagNS<T extends keyof MathMLElementTagNameMap>(namespaceURI: "http://www.w3.org/1998/Math/MathML", localeName: T): HTMLCollectionOf<T extends MathMLElementTagNameMap ? MathMLElementTagNameMap[T] : MathMLElement>;
 
@@ -753,7 +772,7 @@ declare global {
          * @throws a warning when there's no any or at least 1 of `@elements` found with the specified `@namespaceURI` and `@localName`.
          * 
          * @example
-         *  - ELEMENT.NS("http://www.w3.org/1999/xhtml", "p"): HTMLCollectionOf<HTMLParagraphElement>
+         *  - Element.TagNS("http://www.w3.org/1999/xhtml", "p"); -> HTMLCollectionOf<HTMLParagraphElement>
          */
         TagNS<T extends keyof HTMLElementTagNameMap>(namespaceURI: "http://www.w3.org/1999/xhtml", localName: T): HTMLCollectionOf<T extends HTMLElementTagNameMap ? HTMLElementTagNameMap[T] : HTMLElement>;
 
@@ -766,7 +785,7 @@ declare global {
          * @throws a warning when there's no any or at least 1 of `@elements` found with the specified `@namespaceURI` and `@localName`.
          * 
          * @example
-         *  - ELEMENT.NS("http://www.w3.org/2000/svg", "circle"): HTMLCollectionOf<SVGCircleElement>
+         *  - Element.TagNS("http://www.w3.org/2000/svg", "circle"); -> HTMLCollectionOf<SVGCircleElement>
          */
         TagNS<T extends keyof SVGElementTagNameMap>(namespaceURI: "http://www.w3.org/2000/svg", localName: T): HTMLCollectionOf<T extends SVGElementTagNameMap ? SVGElementTagNameMap[T] : SVGElement>;
 
@@ -779,7 +798,7 @@ declare global {
          * @throws a warning when there's no any or at least 1 of `@elements` found with the specified `@namespaceURI` and `@localName`.
          * 
          * @example
-         *  - ELEMENT.NS("myCustomNameSpace", "myCustomLocalName" | "p"): HTMLCollectionOf<Element>
+         *  - Element.TagNS("myCustomNameSpace", "myCustomLocalName" | "p"); -> HTMLCollectionOf<Element>
          */
         TagNS<T extends keyof HTMLElementTagNameMap>(namespaceURI: string | null, localName: T | string): HTMLCollectionOf<T extends HTMLElementTagNameMap ? HTMLElementTagNameMap[T] : Element>;
     };
@@ -852,10 +871,10 @@ declare global {
          *  - An error when parameter `@target` is not provided, or, a warning when parameter `@newTokens` are not provided.
          * 
          * @example
-         *  - // [?]: Default Tokens Collection: []
-         *    const myBtn = Create("button");
-         *    // [?]: New Tokens Collection: ["submitBtn"]
-         *    Class.AddFrom(myBtn, "submitBtn");
+         *  - // [?]: Create a button element.
+         *    const myBtn = Create("button"); -> DOMTokenList: []
+         *    // [?]: Add class token 'submitBtn'.
+         *    Class.AddFrom(myBtn, "submitBtn"); -> DOMTokenList: ["submitBtn"]
          */
         AddFrom(target: HTMLElement, newTokens: string): void;
 
@@ -869,10 +888,10 @@ declare global {
          *  - An error when parameter `@target` is not provided, or, a warning when parameter `@newTokens` are not provided.
          * 
          * @example
-         *  - //* Default Tokens Collection: []
-         *    const Card = Create("div");
-         *    //* New Tokens Collection: ["card", "fetching"]
-         *    Class.AddFrom(Card, "card", "fetching");
+         *  - // [*] Create a div element.
+         *    const Card = Create("div"); -> DOMTokenList: []
+         *    //* Add class tokens "card" and "fetching".
+         *    Class.AddFrom(Card, "card", "fetching"); -> DOMTokenList: ["card", "fetching"]
          */
         AddFrom(target: HTMLElement, ...newTokens: string[]): void;
 
@@ -890,11 +909,55 @@ declare global {
          * 
          * @example
          *  - // Button with class of 'submitBtn', and 'login'.
-         *    const myBtn = Element.Class('submitBtn')[0]; // BEFORE: DOMTokenList: ["submitBtn", "login"]
+         *    const myBtn = Element.Class('submitBtn')[0]; -> DOMTokenList: ["submitBtn", "login"]
          *    // Removing class 'login' to button element.
-         *    Class.RemoveFrom(myBtn, "login"); // AFTER: DOMTokenList: ["submitBtn"]
+         *    Class.RemoveFrom(myBtn, "login"); -> DOMTokenList: ["submitBtn"]
          */
-        RemoveFrom(target: Element, ...thisTokens: string[]): void
+        RemoveFrom(target: Element, ...thisTokens: string[]): void;
+
+        /**
+         * Toggle the specified class token from the target `@element` `@DOMTokenList`, if the specified
+         * class token is currently exists at target '@element', it will be removed and return false as new state status, or else,
+         * will be added and return true as new state status.
+         * 
+         * @param target - The specified target element to toggle class with.
+         * @param thisToken - The specified class token to toggle state.
+         * 
+         * @throws
+         *  - An error when parameter `@target` or `@thisToken` are not provided or invalid.
+         * 
+         * @example
+         *  - // [?]: A button with class names.
+         *    const myBtn = Create("button", { ClassNames: ["submitBtn", "login", "disabled"] }); -> HTMLButtonElement: DOMTokenList -> ["submitBtn", "login", "disabled"]
+         *    // [?]: Toggle the state of class token 'disabled' into false, and removed from the DOMTokenList of button element.
+         *    Class.ToggleFrom(myBtn, "disabled"); -> DOMTokenList: ["submitBtn", "login"]
+         */
+        ToggleFrom(target: Element, thisToken: string): boolean;
+
+        /**
+         * Toggle the specified class token from the target `@element` with an option to force its toggle state
+         * by provided a `@boolean` status value ('@true' or '@false') at parameter `@force`.
+         * 
+         * ***States***:
+         *  - **FALSE**: Removes the specified class token if exists at the specified target element, and return '@false'.
+         *    **TRUE**: Adds the specified class token if not exists at the specified target element, and return '@true'.
+         * 
+         * @param target - The specified target element to toggle class with.
+         * @param thisToken - The specified class token to toggle state.
+         * @param force - (Optional): A force status to apply as toggle state of the specified class token.
+         * 
+         * @throws
+         *  - An error when parameter `@target` or `@thisToken` are not provided or invalid.
+         * 
+         * @example
+         *  - // [?]: A button with class names.
+         *    const myBtn = Create("button", { ClassNames: ["submitBtn", "login", "disabled"] }); -> HTMLButtonElement: DOMTokenList -> ["submitBtn", "login", "disabled"]
+         *    // [?]: Toggle the state of class token 'disabled' into false, and removed from the DOMTokenList of button element.
+         *    Class.ToggleFrom(myBtn, "disabled"); -> DOMTokenList: ["submitBtn", "login"]
+         *    // [?]: Always ensure class token 'disabled' exists at button element.
+         *    Class.ToggleFrom(myBtn, "disabled", true); -> DOMTokenList: ["submitBtn", "login", "disabled"]
+         */
+        ToggleFrom(target: Element, thisToken: string, force?: boolean): boolean;
     }
 
     /* ===============|===============|===============|=============== */
@@ -908,69 +971,100 @@ declare global {
      */
 
     /**
-     * Performs a method to each elements of the specified `@array`. This method will perform the specified
-     * `@Do` method for each elements.
+     * Performs the method specified to each elements of an `@array`.
      * 
      * ***Note***:
-     *  - When parameter `@thisArg` is provided, parameter `@Do` required to be a non-anonymous function.
+     *  - When parameter `@thisArg` is provided, parameter `@callback` required to be a non-anonymous function.
      *    (E.g. Starts with 'function' keyword)
      * 
      * @param arr - The specified list of elements.
-     * @param Do - The specified method to perform to each elements of `@array`.
+     * @param callback - The specified method to perform for each elements.
      * @param thisArg
-     *  - (Optional): A parameter to use or call inside of method `@Do` as reference value that might have been used in some parts.
+     *  - (Optional): A parameter that can be anything (except: `@undefined` and `@null`) and be use or access inside of the specified method with keyword `@this`.
+     *    (Note: The specified keyword must support `@this` keyword, or else, it will throw an error.)
      * 
      * @throws
-     *  - An error when these required parameter `@arr` and `@Do` are not provided or invalid.
+     *  - An error when parameter `@arr` or `@callback` are not provided or invalid, and a warning when
+     *    parameter `@thisArg` is provided but the parameter `@callback` does not support `@this`
+     *    keyword.
      * 
      * @example
-     *  - EachOf([1, 2, 3, 4, 5], n => LOG(n * 2)): 2 4 6 8 10 |
-     *    EachOf([1, 2, 3, 4, 5], function (n) { LOG(n * this); }, 2): 2 4 6 8 10
+     *  - EachOf([1, 2, 3, 4, 5], n => LOG(n * 2)); -> 2 4 6 8 10
+     *    EachOf([1, 2, 3, 4, 5], function (n) { LOG(n * this); }, 2); -> 2 4 6 8 10
      */
-    function EachOf<T, A>(arr: T[], Do: (value: T, index: number, array: T[]) => void, thisArg?: A): void;
+    function EachOf<T, A>(arr: T[], callback: (value: T, index: number, array: T[]) => void, thisArg?: A): void;
 
     /**
-     * Performs a method to each elements of the specified `@array`. This method will perform the specified
-     * `@areThis` method to validate each elements, until it returns a result that coercible with `@Boolean` 
-     * value true, or else, perform until the last element from `@array`.
+     * Performs the specified method to each elements of an `@array`. The 'SomeOf()' method will perform the specified method from `@callback`
+     * parameter, the process would stop when one of the elements of an array returns a response from '@callback' method that is coercible to '@boolean'
+     * value '@true', or else, continues until the very last element of an array.
      * 
      * ***Note***:
-     *  - When parameter `@thisArg` is provided, parameter `@areThis` required to be a non-anonymous function.
+     *  - When parameter `@thisArg` is provided, parameter `@callback` required to be a non-anonymous function.
      *    (E.g. Starts with 'function' keyword)
      * 
      * @param arr - The specified list of elements.
-     * @param areThis - The specified method to perform to each elements of `@array`.
-     * @param thisArg 
-     *  - (Optional): A parameter to use or call inside of method `@areThis` as validation reference value to meet.
+     * @param callback - The specified method to perform for each elements.
+     * @param thisArg
+     *  - (Optional): A parameter that can be anything (except: `@undefined` and `@null`) and be use or access inside of the specified method with keyword `@this`.
+     *    (Note: The specified keyword must support `@this` keyword, or else, it will throw an error.)
      * 
      * @throws
-     *  - An error when these required parameter `@arr` and `@areThis` are not provided or invalid.
+     *  - An error when parameter `@arr` or `@callback` are not provided or invalid, and a warning when
+     *    parameter `@thisArg` is provided but the parameter `@callback` does not support `@this`
+     *    keyword.
      * 
      * @example
-     *  - SomeOf([1, 2, undefined, 5, 'd'], item => IsString(item)): true |
-     *    SomeOf([1, 2, undefined, 5, 'd'], function ())
+     *  - SomeOf([1, 2, undefined, 5, 'd'], item => IsString(item)); -> true
+     *    SomeOf([1, 2, undefined, 5, 'd'], function (item) { 
+     *       return GetConstructorOrTypeOf(item) === this; 
+     *    }, "String"); -> true
      */
-    function SomeOf<T, A>(arr: T[], areThis: (value: T, index: number, array: T[]) => unknown, thisArg?: A): boolean
+    function SomeOf<T, A>(arr: T[], callback: (value: T, index: number, array: T[]) => unknown, thisArg?: A): boolean
 
     /**
-     * Performs the specified method to each of elements from an `@array`, and checks the response of the
-     * performed method as coercible with `@boolean` value `@true`, or exits when the performed method response with
-     * a coercible `@boolean` value `@false`.
+     * Performs the specified method to each elements of an `@array`. The 'EveryOf()' method is the opposite of 'SomeOf' method, this method will perform the specified
+     * method from '@callback', and the process would stops when one of the elements of an array returns a response from '@callback' method that is coercible to
+     * '@boolean' value '@false', or else, continues until the very last element of an array.
      * 
      * @param arr - The specified list of elements.
-     * @param areThis - The specified method to perform to each elements of `@array`
-     * @param thisArg 
-     *  - (Optional): A parameter to use or call inside of method `@areThis` as validation reference value to meet.
+     * @param callback - The specified method to perform for each elements.
+     * @param thisArg
+     *  - (Optional): A parameter that can be anything (except: `@undefined` and `@null`) and be use or access inside of the specified method with keyword `@this`.
+     *    (Note: The specified keyword must support `@this` keyword, or else, it will throw an error.)
      * 
      * @throws
-     *  - An error when these required parameter `@arr` and `@areThis` are not provided or invalid.
+     *  - An error when parameter `@arr` or `@callback` are not provided or invalid, and a warning when
+     *    parameter `@thisArg` is provided but the parameter `@callback` does not support `@this`
+     *    keyword.
      * 
      * @example
-     *  - EveryOf([1, 2, 3, 4, 5], n => (typeof n === "number" || n instanceof Number) && !Number.isNaN(n)): true |
-     *    EveryOf([1, 2, 3, '4', 5], n => (typeof n === "number" || n instanceof Number) && !Number.isNaN(n)): false
+     *  - EveryOf([1, 2, 3, 4, 5], n => (typeof n === "number" || n instanceof Number) && !Number.isNaN(n)); -> true
+     *    EveryOf([1, 2, 3, '4', 5], n => (typeof n === "number" || n instanceof Number) && !Number.isNaN(n)); -> false
      */
-    function EveryOf<T, A>(arr: T[], areThis: (value: T, index: number, array: T[]) => boolean, thisArg?: A): this is T[];
-    function EveryOf<T, A>(arr: T[], areThis: (value: T, index: number, array: T[]) => boolean, thisArg?: A): boolean;
+    function EveryOf<T, S extends T, A>(arr: T[], callback: (value: T, index: number, array: T[]) => value is S, thisArg?: A): this is S[];
+    function EveryOf<T, A>(arr: T[], callback: (value: T, index: number, array: T[]) => unknown, thisArg?: A): boolean;
+
+    /**
+     * Performs the specified method to each elements of an `@array`. The 'MapOf()' method performs the method from `@callback`
+     * and returns the response of '@callback' to each elements processed as a new array of result.
+     * 
+     * @param arr - The specified list of elements.
+     * @param callback - The specified method to perform for each elements.
+     * @param thisArg
+     *  - (Optional): A parameter that can be anything (except: `@undefined` and `@null`) and be use or access inside of the specified method with keyword `@this`.
+     *    (Note: The specified keyword must support `@this` keyword, or else, it will throw an error.)
+     * 
+     * @throws
+     *  - An error when parameter `@arr` or `@callback` are not provided or invalid, and a warning when
+     *    parameter `@thisArg` is provided but the parameter `@callback` does not support `@this`
+     *    keyword.
+     * 
+     * @example
+     *  - MapOf([1, 2, 3, 4, 5], n => n * 2); -> [2, 4, 6, 8, 10]
+     *    MapOf([1, 2, 3, 4, 5], function (n) { return n * this.multiplier; }, { multiplier: 2 }); -> [2, 4, 6, 8, 10]
+     */
+    function MapOf<T, U, A>(arr: T[], callback: (value: T, index: number, array: T[]) => U, thisArg?: A): U[];
 
     /**
      * Returns a sliced collection of array elements from the specified `@arr` with the specified `@start` index position.
@@ -987,7 +1081,7 @@ declare global {
      *  - An empty array '[]' when the specified data from parameter `@arr` is invalid, or else, when empty.
      * 
      * @example
-     *  - Slice(['a', 1, 2, 3, 4, ...], 1): [1, 2, 3, 4, ...]
+     *  - Slice(['a', 1, 2, 3, 4, ...], 1); -> [1, 2, 3, 4, ...]
      */
     function Slice<T>(arr: T[], start: number): T[];
 
@@ -1008,7 +1102,7 @@ declare global {
      *    a warning when the specified collection of `@array` elements is empty.
      * 
      * @example
-     *  - Slice(['a', 1, 2, 3, 4, ...], 1, 5): [1, 2, 3, 4]
+     *  - Slice(['a', 1, 2, 3, 4, ...], 1, 5); -> [1, 2, 3, 4]
      */
     function Slice<T>(arr: T[], start: number, end: number): T[];
 

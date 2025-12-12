@@ -7,139 +7,194 @@
  */
 
 /**
- * Performs a method to each elements of the specified `@array`. This method will perform the specified
- * `@Do` method for each elements.
+ * Performs the method specified to each elements of an `@array`.
  * 
  * ***Note***:
- *  - When parameter `@thisArg` is provided, parameter `@Do` required to be a non-anonymous function.
+ *  - When parameter `@thisArg` is provided, parameter `@callback` required to be a non-anonymous function.
  *    (E.g. Starts with 'function' keyword)
  * 
  * @param arr - The specified list of elements.
- * @param Do - The specified method to perform to each elements of `@array`.
+ * @param callback - The specified method to perform for each elements.
  * @param thisArg
- *  - (Optional): A parameter to use or call inside of method `@Do` as reference value that might have been used in some parts.
+ *  - (Optional): A parameter that can be anything (except: `@undefined` and `@null`) and be use or access inside of the specified method with keyword `@this`.
+ *    (Note: The specified keyword must support `@this` keyword, or else, it will throw an error.)
  * 
  * @throws
- *  - An error when these required parameter `@arr` and `@Do` are not provided or invalid.
+ *  - An error when parameter `@arr` or `@callback` are not provided or invalid, and a warning when
+ *    parameter `@thisArg` is provided but the parameter `@callback` does not support `@this`
+ *    keyword.
  * 
  * @example
  *  - EachOf([1, 2, 3, 4, 5], n => LOG(n * 2)): 2 4 6 8 10 |
  *    EachOf([1, 2, 3, 4, 5], function (n) { LOG(n * this); }, 2): 2 4 6 8 10
  */
-export function EachOf<T, A>(arr: T[], Do: (value: T, index: number, array: T[]) => void, thisArg?: A): void {
+export function EachOf<T, A>(arr: T[], callback: (value: T, index: number, array: T[]) => void, thisArg?: A): void {
     /* -- Validation -- */
-    const Emitter = NameOf(EachOf), Targets = ["arr", "Do", "thisArg"];
+    const Emitter = NameOf(EachOf), Targets = ["arr", "callback", "thisArg"];
 
-    // [!]: Exits when parameter @arr or @Do are missing.
-    [arr, Do].forEach((val, pos) => {
+    // [!]: Exits when parameter @arr or @callback are missing.
+    [arr, callback].forEach((val, pos) => {
         if (IsNullUndefined(val))
-            $MissingParameterError(Emitter, `${Targets[pos]}${pos > 0 ? `['${val}']` : ""}`, val);
+            $MissingParameterError(Emitter, Targets[pos], val);
+
+        // [*]: Parameter @arr.
+        if (pos === 0 && !IsArray(val))
+            $UnexpectedTypeError(Emitter, Targets[pos], GetConstructorOrTypeOf(val), "Array");
+
+        // [*]: Parameter @callback.
+        if (pos > 0 && !(IsFunc(val) || IsAsyncFunc(val)))
+            $UnexpectedTypeError(Emitter, Targets[pos], GetConstructorOrTypeOf(val), "Function | AsyncFunction");
     });
 
-    // [!]: Exits when parameter @arr is invalid.
-    if (!IsArray(arr))
-        $UnexpectedTypeError(Emitter, Targets[0], GetConstructorOrTypeOf(arr), "Array");
+    // [#]: Warn about possible error when parameter @thisArg is provided but parameter @callback does not support @this keyword.
+    if (!IsNullUndefined(thisArg) && !(IsFunc(callback) || IsAsyncFunc(callback)))
+        WARN(`EachOf(): Received a method that does not support @this keyword! This could emit an error when @this keyword is called inside of @callback method.`);
 
-    // [!]: Exits when parameter @Do is invalid.
-    if (!IsFunc(Do) && !IsAsyncFunc(Do))
-        $UnexpectedTypeError(Emitter, Targets[1], GetConstructorOrTypeOf(Do), "Function | Async Function");
-
-    // [#]: Warn about possible error when parameter @thisArg is provided but parameter @areThis does not support @this keyword.
-    if (!IsNullUndefined(thisArg) && !(IsFunc(Do) || IsAsyncFunc(Do)))
-        WARN(`EachOf(): Received a method that does not support @this keyword! This could emit an error when @this keyword is called inside of @Do method.`);
-
-    /* -- Process -- */
-    return !IsNullUndefined(thisArg) ? arr.forEach(Do, thisArg) : arr.forEach(Do);
+    /* -- Process & Result -- */
+    return !IsNullUndefined(thisArg) ? arr.forEach(callback, thisArg) : arr.forEach(callback);
 }
 
 /**
- * Performs a method to each elements of the specified `@array`. This method will perform the specified
- * `@areThis` method to validate each elements, until it returns a result that coercible with `@Boolean` 
- * value true, or else, perform until the last element from `@array`.
+ * Performs the specified method to each elements of an `@array`. The 'SomeOf()' method will perform the specified method from `@callback`
+ * parameter, the process would stop when one of the elements of an array returns a response from '@callback' method that is coercible to '@boolean'
+ * value '@true', or else, continues until the very last element of an array.
  * 
  * ***Note***:
- *  - When parameter `@thisArg` is provided, parameter `@areThis` required to be a non-anonymous function.
+ *  - When parameter `@thisArg` is provided, parameter `@callback` required to be a non-anonymous function.
  *    (E.g. Starts with 'function' keyword)
  * 
  * @param arr - The specified list of elements.
- * @param areThis - The specified method to perform to each elements of `@array`.
- * @param thisArg 
- *  - (Optional): A parameter to use or call inside of method `@areThis` as validation reference value to meet.
+ * @param callback - The specified method to perform for each elements.
+ * @param thisArg
+ *  - (Optional): A parameter that can be anything (except: `@undefined` and `@null`) and be use or access inside of the specified method with keyword `@this`.
+ *    (Note: The specified keyword must support `@this` keyword, or else, it will throw an error.)
  * 
  * @throws
- *  - An error when these required parameter `@arr` and `@areThis` are not provided or invalid.
+ *  - An error when parameter `@arr` or `@callback` are not provided or invalid, and a warning when
+ *    parameter `@thisArg` is provided but the parameter `@callback` does not support `@this`
+ *    keyword.
  * 
  * @example
- *  - SomeOf([1, 2, undefined, 5, 'd'], item => IsString(item)): true |
- *    SomeOf([1, 2, undefined, 5, 'd'], function ())
+ *  - SomeOf([1, 2, undefined, 5, 'd'], item => IsString(item)); -> true
+ *    SomeOf([1, 2, undefined, 5, 'd'], function (item) { 
+ *       return GetConstructorOrTypeOf(item) === this; 
+ *    }, "String"); -> true
  */
-export function SomeOf<T, A>(arr: T[], areThis: (value: T, index: number, array: T[]) => unknown, thisArg?: A): boolean {
+export function SomeOf<T, A>(arr: T[], callback: (value: T, index: number, array: T[]) => unknown, thisArg?: A): boolean {
     /* -- Validation -- */
-    const Emitter = NameOf(SomeOf), Targets = ["arr", "areThis", "thisArg"];
+    const Emitter = NameOf(SomeOf), Targets = ["arr", "callback", "thisArg"];
 
-    // [!]: Exits when parameter @arr or @areThis are missing.
-    EachOf([arr, areThis], (val, pos) => {
+    // [!]: Exits when parameter @arr or @callback are missing.
+    EachOf([arr, callback], (val, pos) => {
         if (IsNullUndefined(val))
-            $MissingParameterError(Emitter, `${Targets[pos]}${pos > 0 ? `['${val}']` : ""}`, val);
+            $MissingParameterError(Emitter, Targets[pos], val);
+
+        // [*]: Parameter @arr.
+        if (pos === 0 && !IsArray(val))
+            $UnexpectedTypeError(Emitter, Targets[pos], GetConstructorOrTypeOf(val), "Array");
+
+        // [*]: Parameter @callback.
+        if (pos > 0 && !(IsFunc(val) || IsAsyncFunc(val)))
+            $UnexpectedTypeError(Emitter, Targets[pos], GetConstructorOrTypeOf(val), "Function | AsyncFunction");
     });
 
-    // [!]: Exits when parameter @arr is invalid.
-    if (!IsArray(arr))
-        $UnexpectedTypeError(Emitter, Targets[0], GetConstructorOrTypeOf(arr), "Array");
+    // [#]: Warn about possible error when parameter @thisArg is provided but parameter @callback does not support @this keyword.
+    if (!IsNullUndefined(thisArg) && !(IsFunc(callback) || IsAsyncFunc(callback)))
+        WARN(`SomeOf(): Received a method that does not support @this keyword! This could emit an error when @this keyword is called inside of @callback method.`);
 
-    // [!]: Exits when parameter @areThis is invalid.
-    if (!IsFunc(areThis) && !IsAsyncFunc(areThis))
-        $UnexpectedTypeError(Emitter, Targets[1], GetConstructorOrTypeOf(areThis), "Function | Async Function");
-
-    // [#]: Warn about possible error when parameter @thisArg is provided but parameter @areThis does not support @this keyword.
-    if (!IsNullUndefined(thisArg) && !(IsFunc(areThis) || IsAsyncFunc(areThis)))
-        WARN(`SomeOf(): Received a method that does not support @this keyword! This could emit an error when @this keyword is called inside of @areThis method.`);
-
-    /* -- Process -- */
-    return !IsNullUndefined(thisArg) ? arr.some(areThis, thisArg) : arr.some(areThis);
+    /* -- Process & Result -- */
+    return !IsNullUndefined(thisArg) ? arr.some(callback, thisArg) : arr.some(callback);
 }
 
 /**
- * Performs the specified method to each of elements from an `@array`, and checks the response of the
- * performed method as coercible with `@boolean` value `@true`, or exits when the performed method response with
- * a coercible `@boolean` value `@false`.
+ * Performs the specified method to each elements of an `@array`. The 'EveryOf()' method is the opposite of 'SomeOf' method, this method will perform the specified
+ * method from '@callback', and the process would stops when one of the elements of an array returns a response from '@callback' method that is coercible to
+ * '@boolean' value '@false', or else, continues until the very last element of an array.
  * 
  * @param arr - The specified list of elements.
- * @param areThis - The specified method to perform to each elements of `@array`
- * @param thisArg 
- *  - (Optional): A parameter to use or call inside of method `@areThis` as validation reference value to meet.
+ * @param callback - The specified method to perform for each elements.
+ * @param thisArg
+ *  - (Optional): A parameter that can be anything (except: `@undefined` and `@null`) and be use or access inside of the specified method with keyword `@this`.
+ *    (Note: The specified keyword must support `@this` keyword, or else, it will throw an error.)
  * 
  * @throws
- *  - An error when these required parameter `@arr` and `@areThis` are not provided or invalid.
+ *  - An error when parameter `@arr` or `@callback` are not provided or invalid, and a warning when
+ *    parameter `@thisArg` is provided but the parameter `@callback` does not support `@this`
+ *    keyword.
  * 
  * @example
  *  - EveryOf([1, 2, 3, 4, 5], n => (typeof n === "number" || n instanceof Number) && !Number.isNaN(n)): true |
  *    EveryOf([1, 2, 3, '4', 5], n => (typeof n === "number" || n instanceof Number) && !Number.isNaN(n)): false
  */
-export function EveryOf<T, A>(arr: T[], areThis: (value: T, index: number, array: T[]) => value is T, thisArg?: A): this is number[] {
+export function EveryOf<T, S extends T, A>(arr: T[], callback: (value: T, index: number, array: T[]) => value is S, thisArg?: A): this is S[] {
     /* -- Validation -- */
-    const Emitter = NameOf(EveryOf), Targets = ["arr", "areThis", "thisArg"];
+    const Emitter = NameOf(EveryOf), Targets = ["arr", "callback", "thisArg"];
 
-    // [!]: Exits when parameter @arr or @areThis are missing.
-    EachOf([arr, areThis], (val, pos) => {
+    // [!]: Exits when parameter @arr or @callback are missing.
+    EachOf([arr, callback], (val, pos) => {
         if (IsNullUndefined(val))
-            $MissingParameterError(Emitter, `${Targets[pos]}${pos > 0 ? `['${val}']` : ""}`, val);
+            $MissingParameterError(Emitter, Targets[pos], val);
+
+        // [*]: Parameter @arr.
+        if (pos === 0 && !IsArray(val))
+            $UnexpectedTypeError(Emitter, Targets[pos], GetConstructorOrTypeOf(val), "Array");
+
+        // [*]: Parameter @callback.
+        if (pos > 0 && !(IsFunc(val) || IsAsyncFunc(val)))
+            $UnexpectedTypeError(Emitter, Targets[pos], GetConstructorOrTypeOf(val), "Function | AsyncFunction");
     });
 
-    // [!]: Exits when parameter @arr is invalid.
-    if (!IsArray(arr))
-        $UnexpectedTypeError(Emitter, Targets[0], GetConstructorOrTypeOf(arr), "Array");
+    // [#]: Warn about possible error when parameter @thisArg is provided but parameter @callback does not support @this keyword.
+    if (!IsNullUndefined(thisArg) && !(IsFunc(callback) || IsAsyncFunc(callback)))
+        WARN(`EveryOf(): Received a method that does not support @this keyword! This could emit an error when @this keyword is called inside of @callback method.`);
 
-    // [!]: Exits when parameter @areThis is invalid.
-    if (!IsFunc(areThis) && !IsAsyncFunc(areThis))
-        $UnexpectedTypeError(Emitter, Targets[1], GetConstructorOrTypeOf(areThis), "Function | Async Function");
+    /* -- Process & Result -- */
+    return !IsNullUndefined(thisArg) ? arr.every(callback, thisArg) : arr.every(callback);
+}
 
-    // [#]: Warn about possible error when parameter @thisArg is provided but parameter @areThis does not support @this keyword.
-    if (!IsNullUndefined(thisArg) && !(IsFunc(areThis) || IsAsyncFunc(areThis)))
-        WARN(`EveryOf(): Received a method that does not support @this keyword! This could emit an error when @this keyword is called inside of @areThis method.`);
+/**
+ * Performs the specified method to each elements of an `@array`. The 'MapOf()' method performs the method from `@callback`
+ * and returns the response of '@callback' to each elements processed as a new array of result.
+ * 
+ * @param arr - The specified list of elements.
+ * @param callback - The specified method to perform for each elements.
+ * @param thisArg
+ *  - (Optional): A parameter that can be anything (except: `@undefined` and `@null`) and be use or access inside of the specified method with keyword `@this`.
+ *    (Note: The specified keyword must support `@this` keyword, or else, it will throw an error.)
+ * 
+ * @throws
+ *  - An error when parameter `@arr` or `@callback` are not provided or invalid, and a warning when
+ *    parameter `@thisArg` is provided but the parameter `@callback` does not support `@this`
+ *    keyword.
+ * 
+ * @example
+ *  - MapOf([1, 2, 3, 4, 5], n => n * 2); -> [2, 4, 6, 8, 10] |
+ *    MapOf([1, 2, 3, 4, 5], function (n) { return n * this.multiplier; }, { multiplier: 2 }); [2, 4, 6, 8, 10]
+ */
+export function MapOf<T, U, A>(arr: T[], callback: (value: T, index: number, array: T[]) => U, thisArg?: A): U[] {
+    /* -- Validation -- */
+    const Emitter = NameOf(MapOf), Targets = ["arr", "callback", "thisArg"];
 
-    /* -- Process -- */
-    return !IsNullUndefined(thisArg) ? arr.every(areThis, thisArg) : arr.every(areThis);
+    // [!]: Exits when parameter @arr or @callback is not provided or invalid.
+    EachOf([arr, callback], (val, pos) => {
+        if (IsNullUndefined(val))
+            $MissingParameterError(Emitter, Targets[pos], val);
+
+        // [*]: Parameter @arr.
+        if (pos === 0 && !IsArray(val))
+            $UnexpectedTypeError(Emitter, Targets[pos], GetConstructorOrTypeOf(val), "Array");
+
+        // [*]: Parameter @callback.
+        if (pos > 0 && !(IsFunc(val) || IsAsyncFunc(val)))
+            $UnexpectedTypeError(Emitter, Targets[pos], GetConstructorOrTypeOf(val), "Function | AsyncFunction");
+    });
+
+    // [#]: Warn about possible error when parameter @thisArg is provided but parameter @callback does not support @this keyword.
+    if (!IsNullUndefined(thisArg) && !(IsFunc(callback) || IsAsyncFunc(callback)))
+        WARN(`MapOf(): Received a method that does not support @this keyword! This could emit an error when @this keyword is called inside of @callback method.`);
+
+    /* -- Process & Result -- */
+    return !IsNullUndefined(thisArg) ? arr.map(callback, thisArg) : arr.map(callback);
 }
 
 /**
@@ -151,6 +206,10 @@ export function EveryOf<T, A>(arr: T[], areThis: (value: T, index: number, array
  * 
  * @throws
  *  - An empty array '[]' when the specified data from parameter `@arr` is invalid, or else, when empty.
+ * 
+ * @example
+ *  - Slice(['a', 1, 2, 3, 4, 5], 1); -> [1, 2, 3, 4, 5] |
+ *    Slice(['a', 1, 2, 3, 4, 5], 1, 5); -> [1, 2, 3, 4]
  */
 export function Slice<T>(arr: T[], start: number, end?: number): T[] {
     /* -- Validation -- */

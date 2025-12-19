@@ -48,7 +48,7 @@ export function LocaleDateTime(): string {
  * 
  * Note:
  *  - Does not accept multiple argument, or else it will be treated as `@searchThisKeys` item.
- *  - Accepts multiple keys by seperating them with coma, and then check and return the found 
+ *  - Accepts multiple keys by separating them with coma, and then check and return the found 
  *    list for `@supported` and `@notSupported` property.
  * 
  * @example
@@ -92,11 +92,11 @@ export function NameOf(arg: any): string {
     /* -- Check if @name property is supported -- */
     if (!In(arg, "name")) {
         WARN(`NameOf(): The specified argument does not have or support the '@name' property!`);
-        return "(@Anonymous)";
+        return "(Anonymous)";
     }
 
     /* -- Result -- */
-    return IsEmptyStr(arg.name) ? "(@Anonymous)" : arg.name;
+    return IsEmptyStr(arg.name) ? "(Anonymous)" : arg.name;
 }
 
 /**
@@ -106,7 +106,9 @@ export function NameOf(arg: any): string {
  *  - If the specified argument does not support or have `@length` property, it will
  *    automatically return -1 as invalid response.
  * 
- * @throw a warning when the specified argument does not support or have the `@length` property.
+ * @throws
+ *  - A warning when the specified '@argument' have NaN or not-number type value at property '@length', with a default
+ *    response value of -1.
  * 
  * @example
  *  - Length([1, 2, 3]): 3 |
@@ -114,11 +116,11 @@ export function NameOf(arg: any): string {
  */
 export function LengthOf(arg: any): number {
     if (!In(arg, "length")) {
-        WARN(`LengthOf(): Argument with a type of '${GetConstructorOrTypeOf(arg)}', does not have or support \`@length\` property!`);
+        WARN(`LengthOf(): The specified argument does not support or have @length property!`);
         return -1;
     }
 
-    return arg.length;
+    return IsNum(arg.length) ? arg.length : -1;
 }
 
 /**
@@ -128,7 +130,9 @@ export function LengthOf(arg: any): number {
  *  - If the specified argument does not support or have `@size` property, it will
  *    automatically return -1 as invalid response.
  * 
- * @throws a warning when the type of specified argument does not support or have the `@size` property.
+ * @throws
+ *  - A warning when the specified '@argument' have NaN or not-number type value at property '@size', with a default
+ *    response value of -1.
  * 
  * @example
  *  - SizeOf(new Map([[...], [...]])): 2 |
@@ -140,7 +144,7 @@ export function SizeOf(arg: any): number {
         return -1;
     }
 
-    return arg.size;
+    return !IsNum(arg.size) ? arg.size : -1;
 }
 
 /**
@@ -216,4 +220,47 @@ export function Clamp(val: number, min: number, max: number): number {
 
     /* -- Clamped Result -- */
     return val < min ? min : val > max ? max : val;
+}
+
+/**
+ * Converts your **object** or **array** data into an iterable array of data.
+ * 
+ * @param arg - The specified argument to convert.
+ * 
+ * @throws
+ *  - An error when parameter **@arg** is not provided or invalid, or,
+ *    a warning when its empty.
+ * 
+ * @example
+ *  - const obj = { num1: 20, num2: 30, num3: 40, num4: 50 };
+ *    const arr = [10, 20, 30, 40, 50];
+ *    const objVal = Values(obj); 
+ *      -> [["num1", 20], ["num2", 30], ["num3", 40], ["num4", 50]]
+ *    const arrVal = Values(arr); 
+ *      ->  ArrayIterator<number>
+ *          -> [[0, 10], [1, 20], [2, 30], [3, 40], [4, 50]]
+ */
+export function ValuesOf<V>(arg: (({ [key: string]: V } | ArrayLike<V>) | Array<V>)) {
+    /* -- Validation -- */
+
+    // [!]: Exits when parameter @arg is not provided.
+    if (IsNullUndefined(arg)) {
+        ERROR(`ValuesOf(): Expects an argument of object or array to convert! (Exited with [])`);
+        return ([] as any);
+    }
+
+    // [!]: Exits when parameter @arg is invalid.
+    if (!IsObj(arg) && !IsArray(arg)) {
+        ERROR(`ValuesOf(@arg: ${GetConstructorOrTypeOf(arg)}): Only expects a type object '{}' and array '[]'! (Exited with [])`);
+        return ([] as any);
+    }
+
+    // [#]: Warns and exit when parameter @arg is empty.
+    if ((IsObj(arg) && LengthOf(Object.values(arg)) === 0) || (IsArray(arg) && LengthOf(arg) === 0)) {
+        WARN(`ValuesOf(@arg: ${GetConstructorOrTypeOf(arg) === "Object" ? 'empty object' : "empty array"}): Expects a non-empty argument! (Exited with [])`);
+        return ([] as any);
+    }
+
+    /* -- Process & Result -- */
+    return IsArray(arg) ? arg.values() : IsObj(arg) ? Object.values(arg) : ([] as any);
 }

@@ -6,6 +6,7 @@ import * as Guards from "../tools/guard.js";
 import * as Tools from "../tools/index.js"
 import * as ArrayTools from "../tools/array.js";
 import * as DOMS from "../tools/dom.js";
+import Create from "../tools/create.js";
 import Runtime from "../variables/global.js";
 
 function InitRuntimeTools() {
@@ -14,6 +15,7 @@ function InitRuntimeTools() {
         [Errors, ErrorBuilders, Guards, Tools, ArrayTools, DOMS].forEach(module => {
             RegisterThis(Object.values(module).map(e => e.name), Object.values(module));
         });
+        RegisterThis("Create", Create);
 
         console.log(Runtime);
     } catch (e) {

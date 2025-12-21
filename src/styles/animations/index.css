@@ -17,3 +17,39 @@
         opacity: 0;
     }
 }
+
+/*
+    Loader-Animation
+*/
+@keyframes loader-ani {
+    0% {
+        rotate: 0deg;
+        scale: 0;
+    } 25% {
+        rotate: 0deg;
+        scale: 1.1;
+    } 75% {
+        rotate: 360deg;
+        scale: 1;
+    }
+}
+
+/*
+    Text-Slide-Up-Animation
+*/
+@keyframes text-slide-up {
+    to {
+        top: 0px;
+        opacity: 1;
+    }
+}
+
+/*
+    Text-Slide-Down-Animation
+*/
+@keyframes text-slide-down {
+    to {
+        top: 20px;
+        opacity: 0;
+    }
+}

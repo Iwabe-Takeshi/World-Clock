@@ -8,7 +8,7 @@
 declare global {
     /**
      * Custom application error base properties that extends with ErrorConstructor.
-     * This will be used as base properties 
+     * This will be used as base properties
      */
     class WorldClockError<OtherProperties extends {} = {}> extends Error {
         /* -- Error Name / Type -- */
@@ -72,6 +72,13 @@ declare global {
     type UnknownHTMLTagErrorProps = { UnknownTag: string };
     type UnknownHTMLTagErrorMeta = ErrorBaseContent<UnknownHTMLTagErrorProps>;
     class UnknownHTMLTagError extends WorldClockError<UnknownHTMLTagErrorProps> {}
+
+    /**
+     * Custom error for failed loading runtime tool.
+     */
+    type FailedToLoadRuntimeToolErrorProps = { BindCall: unknown, Status: boolean };
+    type FailedToLoadRuntimeToolErrorMeta = ErrorBaseContent<FailedToLoadRuntimeToolErrorProps>;
+    class FailedToLoadRuntimeToolError extends WorldClockError<FailedToLoadRuntimeToolErrorProps> {}
 }
 
 export { };

@@ -80,3 +80,18 @@ export class UnknownHTMLTagError extends WorldClockError {
         this.TimeStamp = LocaleDateTime();
     }
 }
+
+/**
+ * Custom error for failed loading runtime tool.
+ */
+export class FailedToLoadRuntimeToolError extends WorldClockError {
+    constructor(Meta: FailedToLoadRuntimeToolErrorMeta) {
+        super(Meta);
+        this.Name = this.name;
+        this.Message = Meta.Message;
+        this.Context = Meta.Context;
+        this.Data = Meta.Data;
+        this.Guide = Meta.Guide;
+        this.TimeStamp = LocaleDateTime();
+    }
+}

@@ -17,11 +17,11 @@ export const GetElement = {
 
     /**
      * Returns the first **DOM** elements that matched the specified unique **id**.
-     * 
+     *
      * @param id - The given unique id of element to retrieve from **DOM**.
-     * 
+     *
      * @throws a warning when there's no **element** found with the specified unique **id**.
-     * 
+     *
      * @example
      *  - GetElement.Id("myBtn"); -> HTMLElement
      */
@@ -49,13 +49,13 @@ export const GetElement = {
 
     /**
      * Returns the first **DOM** elements that matched the specified **selector**.
-     * 
+     *
      * @param selector - The specified selector of element to retrieve from **DOM**.
-     * 
+     *
      * @throws a warning when there's no **element** found with the specified **selector**.
-     * 
+     *
      * @example
-     *  - GetElement.Selector("button"); -> HTMLButtonElement 
+     *  - GetElement.Selector("button"); -> HTMLButtonElement
      */
     Selector<T extends keyof HTMLElementTagNameMap>(selector: T): HTMLElementTagNameMap[T] | null {
         /* -- Validation -- */
@@ -78,11 +78,11 @@ export const GetElement = {
 
     /**
      * Returns a live collection of **DOM** elements that matches the specified **selector**.
-     * 
+     *
      * @param selector - The specified selector of elements to retrieve from **DOM**.
-     * 
-     * @throws a warning when there's no any or at least 1 of **element** found with the specified **selector**. 
-     * 
+     *
+     * @throws a warning when there's no any or at least 1 of **element** found with the specified **selector**.
+     *
      * @example
      *  - GetElement.SelectorAll("div"); -> NodeListOf<HTMLDivElement>
      */
@@ -107,11 +107,11 @@ export const GetElement = {
 
     /**
      * Returns a live collection of **DOM** elements that matches the specified **className**.
-     * 
+     *
      * @param className - The given class name attribute of elements to retrieve from **DOM**.
-     * 
+     *
      * @throws a warning when there's no any or at least 1 of **element** found with the specified **className**.
-     * 
+     *
      * @example
      *  - GetElement.Class("cards"); -> HTMLCollectionOf<Element>
      */
@@ -137,11 +137,11 @@ export const GetElement = {
 
     /**
      * Returns a live collection of **DOM** elements that matches the specified **tag**.
-     * 
+     *
      * @param tag - The specified tag of elements to retrieve from **DOM**.
-     * 
+     *
      * @throws a warning when there's no any or at least 1 of **elements** found with the specified **tag**.
-     * 
+     *
      * @example
      *  - GetElement.Tag("div"); -> HTMLCollectionOf<HTMLDivElement>
      */
@@ -167,11 +167,11 @@ export const GetElement = {
 
     /**
      * Returns a live collection of **DOM** elements that matches the specified **name**.
-     * 
+     *
      * @param name - The given name attribute of elements to retrieve from **DOM**.
-     * 
+     *
      * @throws a warning when there's no any or at least 1 of **elements** found with the specified **name**.
-     * 
+     *
      * @example
      *  - GetElement.Name("fields"); -> NodeListOf<HTMLElement>
      */
@@ -197,12 +197,12 @@ export const GetElement = {
 
     /**
      * Returns a live collection of **DOM** elements that matches the specified **namespaceURI** and **localName**.
-     * 
+     *
      * @param namespaceURI - The namespace URI of elements to retrieve from **DOM**.
      * @param localName - The local name of elements to retrieve from **DOM**.
-     * 
+     *
      * @throws a warning when there's no any or at least 1 of **elements** found with the specified **namespaceURI** and **localName**.
-     * 
+     *
      * @example
      *  - GetElement.TagNS("myCustomNameSpace", "myCustomLocalName" | "p"); -> HTMLCollectionOf<Element>
      */
@@ -241,9 +241,9 @@ export const Class = {
 
     /**
      * Returns a live collection of class tokens of the specified **element**.
-     * 
+     *
      * @param target - The specified element to retrieve its live collection of class tokens.
-     * 
+     *
      * @example
      *  - const myBtn = Create("button");
      *    // Retrieve class tokens.
@@ -258,7 +258,7 @@ export const Class = {
             /* -- Validation -- */
             const Emitter = NameOf(Slice(Object.values(this), 1)[0]), Target = "target";
 
-            // [!]: Exits when parameter @target is invalid.
+            // [ERROR]: Exits when parameter @target is invalid.
             if (!IsElement(target))
                 $UnexpectedTypeError(Emitter, Target, GetConstructorOrTypeOf(target), "Element");
 
@@ -272,12 +272,12 @@ export const Class = {
 
     /**
      * Checks the existence of the specified list of class tokens from the target **element** **DOMTokenList**.
-     * 
+     *
      * @param target - The specified element to check the existence of class token to its **DOMTokenList**.
      * @param thisTokens - The specified list of class tokens to check.
-     * 
+     *
      * @example
-     *  - // [?]: Button element with a class of 'loginBtn'.
+     *  - // [INFO]: Button element with a class of 'loginBtn'.
      *    const myBtn = GetElement.Id("loginBtn");
      *    Class.ExistsAt(myBtn, "loginBtn"); -> true
      */
@@ -286,11 +286,11 @@ export const Class = {
             /* -- Validation -- */
             const Emitter = NameOf(Slice(Object.values(this), 1)[1]), Targets = ["target", "thisTokens"];
 
-            // [!]: FALSE when parameter @target is invalid.
+            // [ERROR]: FALSE when parameter @target is invalid.
             if (!IsElement(target))
                 $UnexpectedTypeError(Emitter, Targets[0], GetConstructorOrTypeOf(target), "Element");
 
-            // [#]: FALSE with warning when there are no class tokens provided.
+            // [WARNING]: FALSE with warning when there are no class tokens provided.
             if (LengthOf(thisTokens) === 0) {
                 WARN(`Class>ExistsAt(@${Targets[1]}: [empty]): Expects at least 1 class tokens to validate! (Exited)`);
                 return false;
@@ -298,11 +298,11 @@ export const Class = {
 
             /* -- Process -- */
             return EveryOf(thisTokens, token => {
-                // [!]: FALSE when there are non-string as class tokens specified to parameter @thisTokens.
+                // [ERROR]: FALSE when there are non-string as class tokens specified to parameter @thisTokens.
                 if (!IsString(token))
                     $UnexpectedTypeError(Emitter, `${Targets[1]}['${token}']`, GetConstructorOrTypeOf(token), "String");
 
-                // [?]: Return @token validation result.
+                // [INFO]: Return @token validation result.
                 return this.GetTokensOf(target).contains(token);
             });
         } catch (err) {
@@ -314,13 +314,13 @@ export const Class = {
 
     /**
      * Adds new specified collection of class tokens for the specified **element**.
-     * 
+     *
      * @param target - The specified element to add/set new collection of class tokens.
      * @param newTokens - The specified new collection of class tokens.
-     * 
+     *
      * @throws
      *  - An error when parameter **target** is not provided, or, a warning when parameter **newTokens** are not provided.
-     * 
+     *
      * @example
      *  - // Create a div element.
      *    const Card = Create("div"); -> DOMTokenList: []
@@ -332,11 +332,11 @@ export const Class = {
             /* -- Validation -- */
             const Emitter = NameOf(Slice(Object.values(this), 1)[2]), Targets = ["target", "newTokens"];
 
-            // [!]: Exits when parameter @target is invalid.
+            // [ERROR]: Exits when parameter @target is invalid.
             if (!IsElement(target))
                 $UnexpectedTypeError(Emitter, Targets[0], GetConstructorOrTypeOf(target), "Element");
 
-            // [#]: Exits and warn when there are no new class tokens provided.
+            // [WARNING]: Exits and warn when there are no new class tokens provided.
             if (LengthOf(newTokens) === 0) {
                 WARN(`Class>AddFrom(@${Targets[1]}: [Empty]): Expects at least 1 or more new class tokens to register! (Exited)`);
                 return;
@@ -344,11 +344,11 @@ export const Class = {
 
             /* -- Process -- */
             EachOf(newTokens, token => {
-                // [!]: Exits when there are non-string type value provided as new token item to parameter @newTokens.
+                // [ERROR]: Exits when there are non-string type value provided as new token item to parameter @newTokens.
                 if (!IsString(token))
                     $UnexpectedTypeError(Emitter, `${Targets[1]}['${token}']`, GetConstructorOrTypeOf(token), "String");
 
-                // [?]: Only register current token when its still not registered to @DOMTokenList.
+                // [INFO]: Only register current token when its still not registered to @DOMTokenList.
                 if (!this.ExistsAt(target, token))
                     this.GetTokensOf(target).add(token);
             });
@@ -360,13 +360,13 @@ export const Class = {
 
     /**
      * Removes the specified list of class token from the specified target **element**.
-     * 
+     *
      * @param target - The specified element to add/set new class token.
      * @param thisTokens - The specified collection of class tokens to remove.
-     * 
+     *
      * @throws
      *  - An error when parameter **target** is not provided, or, a warning when parameter **thisTokens** are not provided.
-     * 
+     *
      * @example
      *  - // Button with class of 'submitBtn', and 'login'.
      *    const myBtn = GetElement.Class('submitBtn')[0]; -> DOMTokenList: ["submitBtn", "login"]
@@ -377,11 +377,11 @@ export const Class = {
         /* -- Validation -- */
         const Emitter = NameOf(Slice(Object.values(this), 1)[3]), Targets = ["target", "thisTokens"];
 
-        // [!]: Exits when parameter @target is invalid.
+        // [ERROR]: Exits when parameter @target is invalid.
         if (!IsElement(target))
             $UnexpectedTypeError(Emitter, Targets[0], GetConstructorOrTypeOf(target), "Element");
 
-        // [#]: Exits and warn when there are no class tokens provided.
+        // [WARNING]: Exits and warn when there are no class tokens provided.
         if (LengthOf(thisTokens) === 0) {
             WARN(`Class>RemoveFrom(@${Targets[1]}: [empty]): Expects at least 1 or more class tokens to remove! (Exited)`);
             return;
@@ -389,11 +389,11 @@ export const Class = {
 
         /* -- Process -- */
         EachOf(thisTokens, token => {
-            // [!]: Exits when there are non-string type value provided as class token to remove from @thisTokens.
+            // [ERROR]: Exits when there are non-string type value provided as class token to remove from @thisTokens.
             if (!IsString(token))
                 $UnexpectedTypeError(Emitter, `${Targets[1]}['${token}']`, GetConstructorOrTypeOf(token), "String");
 
-            // [?]: Only remove current token when its still existing @target element's to @DOMTokenList.
+            // [INFO]: Only remove current token when its still existing @target element's to @DOMTokenList.
             if (this.ExistsAt(target, token))
                 this.GetTokensOf(target).remove(token);
         });
@@ -402,46 +402,46 @@ export const Class = {
     /**
      * Toggle the specified class token from the target **element** with an option to force its toggle state
      * by provided a **boolean** status value ('true' or 'false') at parameter **force**.
-     * 
+     *
      * ***States***:
      *  - **FALSE**: Removes the specified class token if exists at the specified target element, and return 'false'.
      *    **TRUE**: Adds the specified class token if not exists at the specified target element, and return 'true'.
-     * 
+     *
      * @param target - The specified target element to toggle class with.
      * @param thisTokens - The specified class token to toggle state.
      * @param force - (Optional): A force status to apply as toggle state of the specified class token.
-     * 
+     *
      * @throws
      *  - An error when parameter **target** or **thisTokens** are not provided or invalid.
-     * 
+     *
      * @example
-     *  - // [?]: A button with class names.
+     *  - // [INFO]: A button with class names.
      *    const myBtn = Create("button", { ClassNames: ["submitBtn", "login", "disabled"] }); -> HTMLButtonElement: DOMTokenList -> ["submitBtn", "login", "disabled"]
-     *    // [?]: Toggle the state of class token 'disabled' into false, and removed from the DOMTokenList of button element.
+     *    // [INFO]: Toggle the state of class token 'disabled' into false, and removed from the DOMTokenList of button element.
      *    Class.ToggleFrom(myBtn, "disabled"); -> DOMTokenList: ["submitBtn", "login"]
-     *    // [?]: Always ensure class token 'disabled' exists at button element.
+     *    // [INFO]: Always ensure class token 'disabled' exists at button element.
      *    Class.ToggleFrom(myBtn, "disabled", true); -> DOMTokenList: ["submitBtn", "login", "disabled"]
      */
     ToggleFrom(target: Element, thisTokens: string, force?: boolean): boolean {
         /* -- Validation -- */
         const Emitter = NameOf(Slice(Object.values(this), 1)[4]), Targets = ["target", "thisTokens", "force"];
 
-        // [?]: Validating parameter @target and @thisTokens.
+        // [INFO]: Validating parameter @target and @thisTokens.
         EachOf([target, thisTokens], (val, pos) => {
-            // [!]: Exits when parameter @target or @thisTokens is not provided.
+            // [ERROR]: Exits when parameter @target or @thisTokens is not provided.
             if (IsNullUndefined(val))
                 $MissingParameterError(Emitter, Targets[pos], val);
 
-            // [!]: Exits when parameter @target is invalid.
+            // [ERROR]: Exits when parameter @target is invalid.
             if (pos === 0 && !IsElement(target))
                 $UnexpectedTypeError(Emitter, Targets[0], GetConstructorOrTypeOf(target), "Element");
 
-            // [!]: Exits when parameter @thisTokens is invalid.
+            // [ERROR]: Exits when parameter @thisTokens is invalid.
             if (pos > 0 && !IsString(thisTokens))
                 $UnexpectedTypeError(Emitter, Targets[1], GetConstructorOrTypeOf(thisTokens), "String");
         });
 
-        // [#]: Warns when @thisTokens is an empty-string.
+        // [WARNING]: Warns when @thisTokens is an empty-string.
         if (IsEmptyStr(thisTokens)) {
             WARN(`Class>ToggleFrom(@${Targets[1]}: ''): Expects a non-empty string. (Exited)`);
             return false;
@@ -450,7 +450,7 @@ export const Class = {
         /* -- Process & Result -- */
         const Tokens = this.GetTokensOf(target);
 
-        // [#]: Warns when @force is not a valid boolean value. (@force will not be used.)
+        // [WARNING]: Warns when @force is not a valid boolean value. (@force will not be used.)
         if (force && !IsBool(force))
             return Tokens.toggle(thisTokens);
 
@@ -469,12 +469,12 @@ export const Attribute = {
 
     /**
      * Returns a **boolean** result whether if every of the specified collection of **elements** has any attributes.
-     * 
+     *
      * @param elements - The specified collection of elements.
-     * 
+     *
      * @throws
      *  - An error when some of parameter **elements** are invalid.
-     * 
+     *
      * @example
      *  - const [a, b, c] = [Create("div"), Create("button", { Id: "myBtn" }), Create("span", { ClassNames: "spanE" })];
      *    Attribute.HasAny(a, b, c); -> false // 'const a' have no any attributes existing.
@@ -482,13 +482,13 @@ export const Attribute = {
     HasAny(...elements: Array<Element>): boolean {
         /* -- Validation -- */
 
-        // [!]: Exits when there are no elements provided from parameter @element.
+        // [ERROR]: Exits when there are no elements provided from parameter @element.
         if (LengthOf(elements) === 0) {
             ERROR(`Attribute>HasAny(): Expects an element! (Exited with false)`);
             return false;
         }
 
-        // [!]: Exits when some of parameter @target item are invalid.
+        // [ERROR]: Exits when some of parameter @target item are invalid.
         SomeOf(elements, element => {
             if (!IsElement(element)) {
                 ERROR(`Attribute>HasAny(@elements['${element}']: non-element): Expects a valid element! (Exited with false)`);
@@ -503,14 +503,14 @@ export const Attribute = {
 
     /**
      * Returns a collection of the specified **attribute key** value from the specified target **element**.
-     * 
+     *
      * @param target - The specified target element.
      * @param attrKeys - The specified collection of attribute keys.
-     * 
+     *
      * @throws
      *  - An error when parameter **target** or **attrKeys** are not provided or invalid, or,
      *    a warning when some of parameter **attrKeys** items are empty string or not existing.
-     * 
+     *
      * @example
      *  - const Card = Create("div", { ClassName: "i-card", Id: "item-card" });
      *    Attribute.GetFrom(Card, "class", "id"); -> ["i-card", "item-card"]
@@ -520,17 +520,17 @@ export const Attribute = {
             /* -- Validation -- */
             const Emitter = NameOf(Slice(Object.values(this), 1)[1]), Targets = ["target", "attrKeys"];
 
-            // [!]: Exits when parameter @target or @attrKeys is not provided.
+            // [ERROR]: Exits when parameter @target or @attrKeys is not provided.
             EachOf([target, attrKeys], (val, pos) => {
                 if (pos === 0 && IsNullUndefined(val) || pos === 1 && LengthOf(val) === 0)
                     $MissingParameterError(Emitter, Targets[pos], val);
             });
 
-            // [!]: Exits when parameter @target is invalid.
+            // [ERROR]: Exits when parameter @target is invalid.
             if (!IsElement(target))
                 $UnexpectedTypeError(Emitter, Targets[0], GetConstructorOrTypeOf(target), "Element");
 
-            // [#]: Warn and exit when parameter @target has no attributes.
+            // [WARNING]: Warn and exit when parameter @target has no attributes.
             if (!this.HasAny(target)) {
                 WARN(`Attribute>GetFrom(@target: no-attributes-exists): The specified target element has currently no attributes exists! (Exited)`);
                 return [];
@@ -539,13 +539,13 @@ export const Attribute = {
             /* -- Process -- */
             const Result: (string | null)[] = [];
             for (const key of attrKeys) {
-                // [#]: Warn and skip current @key if its not a string.
+                // [WARNING]: Warn and skip current @key if its not a string.
                 if (!IsString(key)) {
                     WARN(`Attribute>GetFrom(@attrKeys['${key}']: non-string): A non-string item key is found at @attrKeys. (Skipped)`);
                     continue;
                 }
 
-                // [*]: Store result from @Result array.
+                // [CONTEXT]: Store result from @Result array.
                 Result.push(target.getAttribute(key));
             }
 
@@ -558,16 +558,16 @@ export const Attribute = {
     },
 
     /**
-     * Returns the collection of **attribute node** of the specified collection of **attribute keys** from 
+     * Returns the collection of **attribute node** of the specified collection of **attribute keys** from
      * the target **element**.
-     * 
+     *
      * @param target - The specified target element.
      * @param attrKeys - The specified collection of attribute keys.
-     * 
+     *
      * @throws
      *  - An error when parameter **target** or **attrKeys** are not provided or invalid, or,
      *    a warning when some of parameter **attrKeys** items are empty string or not existing.
-     * 
+     *
      * @example
      *  - const Card = Create("div", { ClassNames: "i-card", Id: "item-card" });
      *    Attribute.GetNodeFrom(Card, "class", "id"); -> Attr[]
@@ -577,17 +577,17 @@ export const Attribute = {
             /* -- Validation -- */
             const Emitter = NameOf(Slice(Object.values(this), 1)[2]), Targets = ["target", "attrKeys"];
 
-            // [!]: Exits when parameter @target or @attrKeys are not provided.
+            // [ERROR]: Exits when parameter @target or @attrKeys are not provided.
             EachOf([target, attrKeys], (val, pos) => {
                 if (pos === 0 && IsNullUndefined(val) || pos > 1 && LengthOf(val) === 0)
                     $MissingParameterError(Emitter, Targets[pos], val);
             });
 
-            // [!]: Exits when parameter @target is invalid.
+            // [ERROR]: Exits when parameter @target is invalid.
             if (!IsElement(target))
                 $UnexpectedTypeError(Emitter, Targets[0], GetConstructorOrTypeOf(target), "Element");
 
-            // [#]: Warn and exit when parameter @target has no attributes.
+            // [WARNING]: Warn and exit when parameter @target has no attributes.
             if (!this.HasAny(target)) {
                 WARN(`Attribute>GetNodeFrom(@target: no-attributes-exists): The specified target element has currently no attributes exists! (Exited)`);
                 return [];
@@ -596,13 +596,13 @@ export const Attribute = {
             /* -- Process -- */
             const Result: Array<(Attr | null)> = [];
             for (const key in attrKeys) {
-                // [#]: Warns and skip current @key if non-string.
+                // [WARNING]: Warns and skip current @key if non-string.
                 if (!IsString(key)) {
                     WARN(`Attribute>GetNodeFrom(@attrKeys['${key}']: non-string): A non-string item key is found at @attrKeys! (Skipped)`);
                     continue;
                 }
 
-                // [*]: Store result from @Result array.
+                // [CONTEXT]: Store result from @Result array.
                 Result.push(target.getAttributeNode(key));
             }
 
@@ -617,14 +617,14 @@ export const Attribute = {
     /**
      * Returns a **boolean** result whether if every of the specified **attribute keys** are existing from the
      * specified target **element**.
-     * 
+     *
      * @param target - The specified target element.
      * @param attrKeys - The specified collection of attribute keys.
-     * 
+     *
      * @throws
      *  - An error when parameter **target** or **attrKeys** are not provided or invalid, or,
      *    a warning when some of parameter **attrKeys** items are empty string.
-     * 
+     *
      * @example
      *  - const Card = Create("div", { ClassNames: "i-card", Id: "item-card" });
      *    Attribute.ExistsFrom(Card, "class", "id"); -> true
@@ -635,23 +635,23 @@ export const Attribute = {
             /* -- Validation -- */
             const Emitter = NameOf(Slice(Object.values(this), 1)[3]), Targets = ["target", "attrKeys"];
 
-            // [!]: Exits when parameter @target or @attrKeys are not provided.
+            // [ERROR]: Exits when parameter @target or @attrKeys are not provided.
             EachOf([target, attrKeys], (val, pos) => {
                 if (pos === 0 && IsNullUndefined(val) || pos === 1 && LengthOf(val) === 0)
                     $MissingParameterError(Emitter, Targets[pos], val);
             });
 
-            // [!]: Exits when parameter @target is invalid.
+            // [ERROR]: Exits when parameter @target is invalid.
             if (!IsElement(target))
                 $UnexpectedTypeError(Emitter, Targets[0], GetConstructorOrTypeOf(target), "Element");
 
-            // [!]: Exits when some of key(s) from parameter @attrKeys are non-string.
+            // [ERROR]: Exits when some of key(s) from parameter @attrKeys are non-string.
             EachOf(attrKeys, key => {
                 if (!IsString(key))
                     $UnexpectedTypeError(Emitter, `${Targets[1]}['${key}']`, GetConstructorOrTypeOf(key), "String");
             });
 
-            // [#]: Warn and exit when parameter @target has no attributes.
+            // [WARNING]: Warn and exit when parameter @target has no attributes.
             if (!this.HasAny(target)) {
                 WARN(`Attribute>ExistsFrom(@target: no-attributes-exists): The specified target element has currently no attributes exists! (Exited)`);
                 return false;
@@ -668,15 +668,15 @@ export const Attribute = {
     /**
      * Sets (or update when already existing) the specified list of **attribute keys** with their **attribute values** from
      * the specified target **element**
-     * 
+     *
      * @param target - The specified target element.
      * @param attrKeys - The specified collection of attribute keys.
      * @param attrVals - The specified collection of attribute key values.
-     * 
+     *
      * @throws
      *  - An error when parameter **target**, **attrKeys**, or **attrVals** are not provided or invalid, or,
      *    a warning when some of parameter **attrKeys** item are empty string.
-     * 
+     *
      * @example
      *  - const Card = Create("div");
      *    Attribute.SetFrom(Card, ["class", "id"], "items i-card", "i-card");
@@ -687,21 +687,21 @@ export const Attribute = {
             const Emitter = NameOf(Slice(Object.values(this), 1)[4]), P = [target, attrKeys, attrVals],
                 Targets = ["target", "attrKeys", "attrVals"];
 
-            // [!]: Exits when parameter @target, @attrKeys, or @attrVals are not provided.
+            // [ERROR]: Exits when parameter @target, @attrKeys, or @attrVals are not provided.
             EachOf(P, (val, pos) => {
                 if (pos < 2 && IsNullUndefined(val) || LengthOf(val) === 0)
                     $MissingParameterError(Emitter, Targets[pos], val);
             });
 
-            // [!]: Exits when parameter @target is invalid.
+            // [ERROR]: Exits when parameter @target is invalid.
             if (!IsElement(target))
                 $UnexpectedTypeError(Emitter, Targets[0], GetConstructorOrTypeOf(P[0]), "Element");
 
-            // [!]: Exits when parameter @attrKeys is invalid.
+            // [ERROR]: Exits when parameter @attrKeys is invalid.
             if (!IsString(attrKeys) && !IsArray(attrKeys))
                 $UnexpectedTypeError(Emitter, Targets[1], GetConstructorOrTypeOf(P[1]), "String | Array<String>");
 
-            // [!]: Exits when parameter @attrKeys and @attrVals are not same type array and length. (Only when there are multiple attribute values provided)
+            // [ERROR]: Exits when parameter @attrKeys and @attrVals are not same type array and length. (Only when there are multiple attribute values provided)
             if (LengthOf(attrVals) > 1) {
                 if (!IsArray(attrKeys))
                     $UnexpectedTypeError(Emitter, Targets[1], GetConstructorOrTypeOf(P[1]), "Array");
@@ -716,22 +716,22 @@ export const Attribute = {
                 return;
             }
 
-            // [*]: Iterate through attribute keys.
+            // [CONTEXT]: Iterate through attribute keys.
             for (const [pos, key] of attrKeys.entries()) {
-                // [#]: Warns and skip current @key if its non-string.
+                // [WARNING]: Warns and skip current @key if its non-string.
                 if (!IsString(key)) {
                     WARN(`Attribute>SetFrom(@attrKeys['${key}']: non-string): An invalid item key is found! (Skipped)`);
                     continue;
                 }
 
-                // [?]: Only change the value of attribute key if its already existed.
+                // [INFO]: Only change the value of attribute key if its already existed.
                 if (this.ExistsFrom(target, key)) {
                     // @ts-ignore
                     this.GetNodeFrom(target, key)[0].value = String(attrVals[pos]);
                     continue;
                 }
 
-                // [*]: Set new attribute from the target element.
+                // [CONTEXT]: Set new attribute from the target element.
                 target.setAttribute(key, String(attrVals[pos]));
             }
         } catch (err) {
@@ -741,14 +741,14 @@ export const Attribute = {
 
     /**
      * Removes the specified list of **attribute keys** from the specified target **element**.
-     * 
+     *
      * @param target - The specified target element.
      * @param attrKeys - The specified collection of attribute keys.
-     * 
+     *
      * @throws
      *  - An error when parameter **target** or **attrKeys** are not provided or invalid, or,
      *    a warning when some of parameter **attrKeys** items are empty string or not existing.
-     * 
+     *
      * @example
      *  - const Card = Create("div", { ClassNames: ["i-cont", "card"], Id: "i-card", tooltip: "Item Card..." });
      *    Attribute.GetNamesFrom(Card); -> ["class", "id", "tooltip"]
@@ -760,13 +760,13 @@ export const Attribute = {
             /* -- Validation -- */
             const Emitter = NameOf(Slice(ValuesOf(this), 1)[5]), Targets = ["target", "attrKeys"];
 
-            // [!]: Exits when parameter @target or @attrKeys are not provided.
+            // [ERROR]: Exits when parameter @target or @attrKeys are not provided.
             EachOf([target, attrKeys], (val, pos) => {
                 if (pos === 0 && IsNullUndefined(val) || pos > 0 && LengthOf(val) === 0)
                     $MissingParameterError(Emitter, Targets[pos], val);
             });
 
-            // [!]: Exits when parameter @target is invalid.
+            // [ERROR]: Exits when parameter @target is invalid.
             if (!IsElement(target))
                 $UnexpectedTypeError(Emitter, Targets[0], GetConstructorOrTypeOf(target), "Element");
 
@@ -774,13 +774,13 @@ export const Attribute = {
 
             /* -- Process -- */
             for (const key in attrKeys) {
-                // [#]: Warns and skip current @key if its non-string type.
+                // [WARNING]: Warns and skip current @key if its non-string type.
                 if (!IsString(key)) {
                     WARN(`Attribute>RemoveFrom(@attrKeys['${key}']: ${GetConstructorOrTypeOf(key)}): An invalid item key is found! (Skipped)`);
                     continue;
                 }
 
-                // [?]: Only remove when current @key is existing.
+                // [INFO]: Only remove when current @key is existing.
                 if (this.ExistsFrom(target, key))
                     target.removeAttribute(key);
             }
@@ -792,13 +792,13 @@ export const Attribute = {
 
 /**
  * Returns the id of the specified **element**.
- * 
+ *
  * @param element - The specified target element.
- * 
+ *
  * @throws
  *  - An error when parameter **@element** is not provided or invalid, or,
  *    a warning when specified target **element** does not have an id.
- * 
+ *
  * @example
  *  - const myBtn = Create("button");
  *    GetIdOf(myBtn); -> "Warning message..."
@@ -810,11 +810,11 @@ export function GetIdOf(element: Element): string {
         /* -- Validation -- */
         const Emitter = NameOf(GetIdOf), Target = "element";
 
-        // [!]: Exits when parameter @element is invalid.
+        // [ERROR]: Exits when parameter @element is invalid.
         if (!IsElement(element))
             $UnexpectedTypeError(Emitter, Target, GetConstructorOrTypeOf(element), "Element");
 
-        // [#]: Warns and exit when "id" property is not supported.
+        // [WARNING]: Warns and exit when "id" property is not supported.
         if (!In(element, "id")) {
             WARN(`GetIdOf(@element: id-not-supported): Does not have or support "id" property! (Exited with empty string)`);
             return "";
@@ -830,14 +830,14 @@ export function GetIdOf(element: Element): string {
 
 /**
  * Sets (or update the existing) unique **id** of the specified **element**.
- * 
+ *
  * @param target - The specified target element.
  * @param Id - The specified unique id.
- * 
+ *
  * @throws
  *  - An error when parameter **@target** or **@Id** are not provided or invalid, or,
  *    a warning when parameter **@Id** is an empty string.
- * 
+ *
  * @example
  *  - const myBtn = Create("button");
  *    SetIdOf(myBtn, "btn");
@@ -848,7 +848,7 @@ export function SetIdOf(element: Element, Id: string): string {
         /* -- Validation -- */
         const Emitter = NameOf(SetIdOf), Targets = ["element", "Id"];
 
-        // [!]: Exits when parameter @element or @Id are not provided or invalid.
+        // [ERROR]: Exits when parameter @element or @Id are not provided or invalid.
         EachOf([element, Id], (val, pos) => {
             if (IsNullUndefined(val))
                 $MissingParameterError(Emitter, Targets[pos], val);
@@ -860,7 +860,7 @@ export function SetIdOf(element: Element, Id: string): string {
                 $UnexpectedTypeError(Emitter, Targets[pos], GetConstructorOrTypeOf(val), "String");
         });
 
-        // [#]: Warn and exits when parameter @id is an empty string.
+        // [WARNING]: Warn and exits when parameter @id is an empty string.
         if (IsEmptyStr(Id)) {
             WARN(`SetIdOf(@Id: ""): Receives an empty string as unique id of element! (Exited with empty string)`);
             return "";
@@ -876,12 +876,12 @@ export function SetIdOf(element: Element, Id: string): string {
 
 /**
  * Returns the **content** of the specified **element**.
- * 
+ *
  * @param element - The specified element.
- * 
+ *
  * @throws
  *  - An error when parameter **@element** is not provided or invalid.
- * 
+ *
  * @example
  *  - const span = Create("span");
  *    SetContentOf(span, "Hello!");
@@ -892,11 +892,11 @@ export function GetContentOf(element: Element): string {
         /* -- Validation -- */
         const Emitter = NameOf(GetContentOf), Target = "element";
 
-        // [!]: Exits when parameter @element is not provided.
+        // [ERROR]: Exits when parameter @element is not provided.
         if (IsNullUndefined(element))
             $MissingParameterError(Emitter, Target, element);
 
-        // [!]: Exits when parameter @element is invalid.
+        // [ERROR]: Exits when parameter @element is invalid.
         if (!IsElement(element))
             $UnexpectedTypeError(Emitter, Target, GetConstructorOrTypeOf(element), "Element");
 
@@ -910,13 +910,13 @@ export function GetContentOf(element: Element): string {
 
 /**
  * Sets (or update the) specified **data** as content of the specified **element**.
- * 
+ *
  * @param element - The specified element.
- * @param data - The specified text content. 
- * 
+ * @param data - The specified text content.
+ *
  * @throws
  *  - An error when parameter **@element** or **@data** are not provided or invalid.
- * 
+ *
  * @example
  *  - const span = Create("span");
  *    SetContentOf(span, "Hello!"); -> "Hello!"
@@ -927,7 +927,7 @@ export function SetContentOf(element: Element, data: any): string {
         /* -- Validation -- */
         const Emitter = NameOf(SetContentOf), Targets = ["element", "data"];
 
-        // [!]: Exits when parameter @element or @data are not provided or invalid.
+        // [ERROR]: Exits when parameter @element or @data are not provided or invalid.
         EachOf([element, data], (val, pos) => {
             if (IsNullUndefined(val))
                 $MissingParameterError(Emitter, Targets[pos], val);
@@ -936,7 +936,7 @@ export function SetContentOf(element: Element, data: any): string {
                 $UnexpectedTypeError(Emitter, Targets[pos], GetConstructorOrTypeOf(val), "Element");
         });
 
-        // [?]: Converted @data into a valid string type.
+        // [INFO]: Converted @data into a valid string type.
         const dataStr = String(data);
         if (IsEmptyStr(dataStr)) {
             WARN(`SetContentOf(@data: ""): Data should not be an empty! (Exited)`);
@@ -953,14 +953,14 @@ export function SetContentOf(element: Element, data: any): string {
 
 /**
  * Mounts the specified collection of **child nodes** from the specified **parent node**.
- * 
+ *
  * @param parentNode - The specified parent node.
  * @param childNodes - The specified collection of child nodes.
- * 
+ *
  * @throws
  *  - An error when parameter **parentNode** or **childNodes** are not provided or invalid, or, a warning when
  *    some of **childNodes** items are invalid.
- * 
+ *
  * @example
  *  - const myButton = Create("button", { ClassName: "a-block-btn", Id: "action-btn" });
  *    const myButtonIcon = Create("i", { ... });
@@ -972,31 +972,31 @@ export function Mount(parentNode: ParentNode, ...childNodes: Array<ChildNode>): 
         /* -- Validation -- */
         const Emitter = NameOf(Mount), Targets = ["parentNode", "childNodes"];
 
-        // [!]: Exits when parent node or child nodes are not provided.
+        // [ERROR]: Exits when parent node or child nodes are not provided.
         EachOf([parentNode, childNodes], (val, pos) => {
             if (pos === 0 && IsNullUndefined(val) || pos > 0 && LengthOf(val) === 0)
                 $MissingParameterError(Emitter, Targets[pos], val);
         });
 
-        // [!]: Exits when parent node is invalid.
+        // [ERROR]: Exits when parent node is invalid.
         if (!IsParentNode(parentNode))
             $UnexpectedTypeError(Emitter, Targets[0], GetConstructorOrTypeOf(parentNode), "ParentNode");
 
-        // [#]: Warns and exit when parent node does not support "@appendChild" property method.
+        // [WARNING]: Warns and exit when parent node does not support "@appendChild" property method.
         if (!In(parentNode, "appendChild")) {
             WARN(`Mount(@parentNode: not-supported-child-mounting): Expects a parent node that supports child mounting! (Exited)`);
             return;
         }
-        
+
         /* -- Process -- */
         for (const childNode of childNodes) {
-            // [#]: Warns and skip when current @childNode is invalid.
+            // [WARNING]: Warns and skip when current @childNode is invalid.
             if (!IsChildNode(childNode)) {
                 WARN(`Mount(@childNodes['${childNode}']: Not-A-ChildNode): Expects all items to be a child node! (Skipped)`);
                 continue;
             }
 
-            // [*]: Mount current @childNode to @parentNode.
+            // [CONTEXT]: Mount current @childNode to @parentNode.
             parentNode.appendChild(childNode);
         }
     } catch (err) {
@@ -1006,12 +1006,12 @@ export function Mount(parentNode: ParentNode, ...childNodes: Array<ChildNode>): 
 
 /**
  * Unmounts the specified collection of **child nodes** from their respective **parent node**.
- * 
+ *
  * @param childNodes - The specified collection of child nodes.
- * 
+ *
  * @throws
  *  - An error when there are no provided or invalid child nodes from parameter **childNodes**.
- * 
+ *
  * @example
  *  - const Btns = [Create("button", { ... }), Create("button", { ... })];
  *    Unmount(...Btns); -> "Removed collection of child node from child nodes tree of parent."
@@ -1021,24 +1021,121 @@ export function Unmount(...childNodes: Array<ChildNode>): void {
         /* -- Validation -- */
         const Emitter = NameOf(Unmount), Target = "childNodes";
 
-        // [!]: Exits when there are no child nodes provided.
+        // [ERROR]: Exits when there are no child nodes provided.
         if (LengthOf(childNodes) === 0)
             $MissingParameterError(Emitter, Target, childNodes);
 
         /* -- Process -- */
         for (const childNode of childNodes) {
-            // [#]: Warns and skip when current @childNode is invalid.
+            // [WARNING]: Warns and skip when current @childNode is invalid.
             if (!IsChildNode(childNode)) {
                 WARN(`Unmount(@childNodes['${childNode}']: Not-A-ChildNode): Expects all of items to be a child node! (Skipped)`);
                 continue;
             }
 
-            // [?]: Only unmount current @childNode if it supports "@remove" property method.
+            // [INFO]: Only unmount current @childNode if it supports "@remove" property method.
             if (In(childNode, "remove"))
                 childNode.remove();
         }
     } catch (err) {
         ERROR(`Unmount(): Failed to unmount node(s)! Error: ${err}`);
         return;
+    }
+}
+
+/**
+ * Generates an **@HTMLElement** instance with the specified **tag**, and allows you to configure
+ * the element's **attribute** properties, **text content**, and **child nodes**.
+ *
+ * @param tag - The specified **HTML tag** to generate.
+ * @param config - (Optional): The available configuration for generated element.
+ *
+ * @example
+ *  - Create("div", { ClassNames: "card", Id: "card-apple" Text: "Apple" }); -> HTMLDivElement
+ *    Create("button", { ClassName: "login", Id: "loginBtn", Text: "Login", "aria-label": "Login Button" }); -> HTMLButtonElement
+ */
+export function Create<T extends keyof HTMLElementTagNameMap>(tag: T, config?: {
+    ClassNames?: string | Array<string>,
+    Children?: ChildNode | Array<ChildNode>,
+    Id?: string,
+    Text?: string,
+    [key: string]: any,
+}) {
+    try {
+        /* -- Validation -- */
+        const Emitter = NameOf(Create), Targets = ["tag", "config"];
+
+        // [ERROR]: Exits when parameter @tag is not provided.
+        if (IsNullUndefined(tag))
+            $MissingParameterError(Emitter, Targets[0], tag);
+
+        // [ERROR]: Exits when parameter @tag is invalid.
+        if (!IsString(tag))
+            $UnexpectedTypeError(Emitter, Targets[0], GetConstructorOrTypeOf(tag), "String");
+
+        // [ERROR]: Exits when parameter @config is provided and not a valid object.
+        if (config && !IsObj(config))
+            $UnexpectedTypeError(Emitter, Targets[1], GetConstructorOrTypeOf(config), "Object");
+
+        /* -- Process -- */
+
+        // [INFO]: Generate the HTMLElement with the specified @tag.
+        const element = DOM.createElement(tag);
+
+        // [ERROR]: Exits when variable @element is unknown.
+        if (IsUnknownElement(element))
+            $UnknownHTMLTagError(Emitter, Targets[0], tag);
+
+        // [INFO]: Only format and process @config when provided.
+        if (config) {
+            // [INFO]: Stores the specified @CustomConfigKeys.
+            const CustomConfigKeys: Array<any> = [];
+            const DefinedConfigKeys = ["classnames", "children", "id", "text"];
+
+            // [INFO]: Storing @CustomConfigKeys.
+            EachOf(Object.values(config), ([key, data]) => {
+                // [INFO]: Format @key into a valid string type.
+                const strKey = String(key);
+
+                // [INFO]: Check if @key is not existing to @DefinedConfigKeys.
+                if (!DefinedConfigKeys.includes(strKey.toLowerCase())) {
+                    CustomConfigKeys.push([strKey, data]);
+                    return;
+                }
+            });
+
+            // [CONTEXT]: @ClassNames
+            if (config.ClassNames)
+                Class.AddFrom(element, ...config.ClassNames);
+
+            // [CONTEXT]: @Children
+            if (config.Children)
+                Mount(element, ...(IsArray(config.Children) ? config.Children : [config.Children]));
+
+            // [CONTEXT]: @Id
+            if (config.Id)
+                SetIdOf(element, config.Id);
+
+            // [CONTEXT]: @Text
+            if (config.Text)
+                SetContentOf(element, config.Text);
+
+
+            // [CONTEXT]: @Other/Custom attributes.
+            if (LengthOf(CustomConfigKeys) > 0)
+                EachOf(CustomConfigKeys, ([key, data]) => {
+                    // [INFO]: Format key into a string type to avoid type error.
+                    key = String(key);
+
+                    // [CONTEXT]: Set the @other or @custom attribute.
+                    Attribute.SetFrom(element, key, data);
+                });
+        }
+
+        /* -- Result -- */
+        return element;
+    } catch (err) {
+        ERROR(`Create(): Failed to generate an HTMLElement instance! Error: ${err}`);
+        return null;
     }
 }

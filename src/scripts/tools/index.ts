@@ -45,12 +45,12 @@ export function LocaleDateTime(): string {
 
 /**
  * Returns a boolean result whether if the specified argument have the specified `@key` of property or method.
- * 
+ *
  * Note:
  *  - Does not accept multiple argument, or else it will be treated as `@searchThisKeys` item.
- *  - Accepts multiple keys by separating them with coma, and then check and return the found 
+ *  - Accepts multiple keys by separating them with coma, and then check and return the found
  *    list for `@supported` and `@notSupported` property.
- * 
+ *
  * @example
  *  - SupportProps("Some Text", "length", "name"): [["Supported", ["length"]], ["NotSupported", ["name"]]]
  */
@@ -82,9 +82,9 @@ export function In(arg: any, ...searchThisKeys: string[]): { Supported: string[]
 
 /**
  * Returns the `@name` property value of the specified argument.
- * 
+ *
  * @param arg - The specified argument to retrieve its `@name` property.
- * 
+ *
  * @throws
  *  - A `@warning` and default response value of `(@Anonymous)` when the specified `@argument` does not have or `@support` the `@name` property.
  */
@@ -101,15 +101,15 @@ export function NameOf(arg: any): string {
 
 /**
  * Returns the length of specified argument.
- * 
+ *
  * Note:
  *  - If the specified argument does not support or have `@length` property, it will
  *    automatically return -1 as invalid response.
- * 
+ *
  * @throws
  *  - A warning when the specified '@argument' have NaN or not-number type value at property '@length', with a default
  *    response value of -1.
- * 
+ *
  * @example
  *  - Length([1, 2, 3]): 3 |
  *    Length({ nums: [1, 2, 3] }): -1
@@ -125,15 +125,15 @@ export function LengthOf(arg: any): number {
 
 /**
  * Returns the `@size` of specified argument.
- * 
+ *
  * Note:
  *  - If the specified argument does not support or have `@size` property, it will
  *    automatically return -1 as invalid response.
- * 
+ *
  * @throws
  *  - A warning when the specified '@argument' have NaN or not-number type value at property '@size', with a default
  *    response value of -1.
- * 
+ *
  * @example
  *  - SizeOf(new Map([[...], [...]])): 2 |
  *    SizeOf(new Set([{...}])): 1
@@ -149,7 +149,7 @@ export function SizeOf(arg: any): number {
 
 /**
  * Executes the specified function safely with try-catch block.
- * 
+ *
  * @param Method - The function to execute safely.
  */
 export function Try(Method: Function) {
@@ -170,7 +170,7 @@ export function Try(Method: Function) {
 
 /**
  * Executes the specified asynchronous function safely with try-catch block.
- * 
+ *
  * @param AsyncMethod - The asynchronous function to execute safely.
  */
 export function AsyncTry(AsyncMethod: Function) {
@@ -201,14 +201,14 @@ export function AsyncTry(AsyncMethod: Function) {
 
 /**
  * Clamps the specified number to its **@minimum** and **@maximum** value it can have.
- * 
+ *
  * @param val - The specified current value.
  * @param min - The specified minimum value it can have.
  * @param max - The specified maximum value it can have.
- * 
+ *
  * @throws
  *  - A number value '0' as invalid response, when any of the parameters are not a valid number.
- * 
+ *
  * @example
  *  - Clamp(-13, 0, 5): 0 |
  *    Clamp(10, 0, 5): 5
@@ -224,38 +224,38 @@ export function Clamp(val: number, min: number, max: number): number {
 
 /**
  * Converts your **object** or **array** data into an iterable array of data.
- * 
+ *
  * @param arg - The specified argument to convert.
- * 
+ *
  * @throws
  *  - An error when parameter **@arg** is not provided or invalid, or,
  *    a warning when its empty.
- * 
+ *
  * @example
  *  - const obj = { num1: 20, num2: 30, num3: 40, num4: 50 };
  *    const arr = [10, 20, 30, 40, 50];
- *    const objVal = Values(obj); 
+ *    const objVal = Values(obj);
  *      -> [["num1", 20], ["num2", 30], ["num3", 40], ["num4", 50]]
- *    const arrVal = Values(arr); 
+ *    const arrVal = Values(arr);
  *      ->  ArrayIterator<number>
  *          -> [[0, 10], [1, 20], [2, 30], [3, 40], [4, 50]]
  */
 export function ValuesOf<V>(arg: (({ [key: string]: V } | ArrayLike<V>) | Array<V>)) {
     /* -- Validation -- */
 
-    // [!]: Exits when parameter @arg is not provided.
+    // [ERROR]: Exits when parameter @arg is not provided.
     if (IsNullUndefined(arg)) {
         ERROR(`ValuesOf(): Expects an argument of object or array to convert! (Exited with [])`);
         return ([] as any);
     }
 
-    // [!]: Exits when parameter @arg is invalid.
+    // [ERROR]: Exits when parameter @arg is invalid.
     if (!IsObj(arg) && !IsArray(arg)) {
         ERROR(`ValuesOf(@arg: ${GetConstructorOrTypeOf(arg)}): Only expects a type object '{}' and array '[]'! (Exited with [])`);
         return ([] as any);
     }
 
-    // [#]: Warns and exit when parameter @arg is empty.
+    // [WARNING]: Warns and exit when parameter @arg is empty.
     if ((IsObj(arg) && LengthOf(Object.values(arg)) === 0) || (IsArray(arg) && LengthOf(arg) === 0)) {
         WARN(`ValuesOf(@arg: ${GetConstructorOrTypeOf(arg) === "Object" ? 'empty object' : "empty array"}): Expects a non-empty argument! (Exited with [])`);
         return ([] as any);

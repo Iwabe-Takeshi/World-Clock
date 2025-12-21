@@ -1,6 +1,6 @@
 /*
   CSS Root Variables.
-  THEME COLORS, TEXT COLORS, ETC.  
+  THEME COLORS, TEXT COLORS, ETC.
 */
 :root {
   /* Background Theme Colors */
@@ -40,7 +40,7 @@
   --border-gray: 1px solid rgb(150, 150, 150);
   --border-dark: 1px solid rgb(50, 50, 50);
   --border-dim-dark: 1px solid rgb(100, 100, 100);
-  --boder-light: 1px solid rgb(225, 225, 225);
+  --border-light: 1px solid rgb(225, 225, 225);
 
   /* Animation Timing */
   --def-cubic: cubic-bezier(0.25, 0, 0, 1);

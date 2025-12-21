@@ -3,5 +3,5 @@
  */
 import "./init/init.app.js";
 
-/* -- @ApplicationInitializer -- */
+/* -- @InitializeApplicationRuntime -- */
 InitApp();

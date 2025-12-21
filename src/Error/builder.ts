@@ -6,7 +6,7 @@
  */
 
 /**
- * Build and emits the contents of `@MissingParameterError`.
+ * Build and emits the contents of **@MissingParameterError**.
  */
 export function $MissingParameterError(emitter: string, target: string, value: any) {
     throw new MissingParameterError({
@@ -24,7 +24,7 @@ export function $MissingParameterError(emitter: string, target: string, value: a
 }
 
 /**
- * Build and emits the contents of `@UnexpectedTypeError`.
+ * Build and emits the contents of **@UnexpectedTypeError**.
  */
 export function $UnexpectedTypeError(emitter: string, target: string, unexpected: string, expected: string) {
     throw new UnexpectedTypeError({
@@ -43,7 +43,7 @@ export function $UnexpectedTypeError(emitter: string, target: string, unexpected
 }
 
 /**
- * Build and emits the contents of `@MismatchArrayLengthError`.
+ * Build and emits the contents of **@MismatchArrayLengthError**.
  */
 export function $MismatchArrayLengthError(emitter: string, target: string, targetLength: number, expectedTargetLength: number) {
     throw new MismatchArrayLengthError({
@@ -62,7 +62,7 @@ export function $MismatchArrayLengthError(emitter: string, target: string, targe
 }
 
 /**
- * Build and emits the contents of `@IndexOutOfBoundsError`.
+ * Build and emits the contents of **@IndexOutOfBoundsError**.
  */
 export function $IndexOutOfBoundsError(emitter: string, target: string, receivedIndex: number, minMaxIndex: number[]) {
     throw new IndexOutOfBoundsError({
@@ -82,7 +82,7 @@ export function $IndexOutOfBoundsError(emitter: string, target: string, received
 }
 
 /**
- * Build and emits the contents of `@UnknownHTMLTagError`.
+ * Build and emits the contents of **@UnknownHTMLTagError**.
  */
 export function $UnknownHTMLTagError(emitter: string, target: string, unknownTag: string) {
     throw new UnknownHTMLTagError({
@@ -96,5 +96,29 @@ export function $UnknownHTMLTagError(emitter: string, target: string, unknownTag
             UnknownTag: unknownTag
         },
         Guide: `Ensure to provide a valid html tag from parameter @${target} at ${emitter}()`
+    });
+}
+
+/**
+ * Builds and emit the contents of **FailedToLoadRuntimeToolError**.
+ *
+ * @param emitter - The method that emits this error.
+ * @param target - The tool that triggered this error.
+ * @param data - The failed data of tool that triggered the error.
+ * @param state - The status of tool that triggered this error.
+ */
+export function $FailedToLoadRuntimeToolError(emitter: string, target: string, data: unknown, state: boolean) {
+    throw new FailedToLoadRuntimeToolError({
+        Message: `Failed to load '${target}' tool!`,
+        Context: {
+            Message: `${emitter}(): Failed to load '${target}' tool from application's runtime!`,
+            EmittedBy: emitter
+        },
+        Data: {
+            Target: target,
+            BindCall: data,
+            Status: state,
+        },
+        Guide: `Guide is not available for this error.`
     });
 }

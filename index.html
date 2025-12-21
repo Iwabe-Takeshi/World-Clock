@@ -12,11 +12,21 @@
     <link rel="stylesheet" href="src/styles/states/active.css">
     <link rel="stylesheet" href="src/styles/states/hover.css">
     <link rel="stylesheet" href="src/styles/ui/footer.css">
+    <link rel="stylesheet" href="src/styles/ui/loader.css">
     <script type="module" src="app/scripts/index.js" async></script>
 </head>
 
 <body>
     <div id="view">
+        <div class="loader">
+            <div class="loader-icon">
+                <i class="loader-icon-block"></i>
+                <i class="loader-icon-block"></i>
+                <i class="loader-icon-block"></i>
+            </div>
+            <i class="loader-context"></i>
+            <span class="loader-subContext"></span>
+        </div>
         <main class="contents" id="live-view">
         </main>
         <footer class="foo-cont">

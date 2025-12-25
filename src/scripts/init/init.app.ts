@@ -2,6 +2,7 @@
 import "../tools/runtime.registry.js";
 import "../../error/base.js";
 import "./init.global.js";
+import "./init.errorListener.js";
 import "./init.interface.js";
 import RunTime from "../variables/global.js";
 
@@ -13,14 +14,13 @@ async function InitApp() {
         /* -- @LoadRuntimeTools -- */
         await InitRuntimeTools();
 
-        // [CONTEXT]: Load application's interface when runtime tools is successfully loaded.
-        InitApplicationInterface();
+        /* -- @InitializeRuntimeErrorListener -- */
+        await InitRuntimeErrorListener();
 
-        /* -- @ApplicationInitializationResponseStatus -- */
-        return { Status: true, StatusData: "Success" };
+        // [CONTEXT]: Load application's interface when runtime tools is successfully loaded.
+        await InitApplicationInterface();
     } catch (err) {
-        console.error("Failed to initialize application contents! Error:", err);
-        return { Status: false, StatusData: err };
+        throw err;
     }
 }
 

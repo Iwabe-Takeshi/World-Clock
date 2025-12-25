@@ -1,0 +1,15 @@
+.loader.in .loader-icon-block {
+    animation: loader-ani 1.5s 0.5s ease-in-out infinite;
+}
+
+.loader.in .loader-icon-block:nth-child(2) {
+    animation-delay: calc(2s / 2);
+}
+
+.loader.in .loader-context::before {
+    animation: text-slide-up 0.5s var(--def-cubic) forwards;
+}
+
+.loader.in .loader-subContext::before {
+    animation: opacity-in 0.5s 1s var(--def-cubic) forwards;
+}

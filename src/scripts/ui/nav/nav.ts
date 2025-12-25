@@ -1,15 +1,29 @@
 // [TASK]: Generate a centralized generator for navigation interface.
 
+import Footer from './container.js';
+
 /**
  * Generates the application's navigation interfaces.
  */
-async function NAV() {
-    try {
-        
-    } catch (err) {
-        ERROR(`Failed to generate navigation interface! Error: ${err}`);
-        return Create("span", { ClassNames: "err-block nav", Text: "Navigation Load Error!" });
-    }
-}
+export default async function NAV(View: Element) {
+    const Emitter = NameOf(NAV), Target = "View";
 
-export default NAV;
+    // [ERROR]: Exits when root element (view) is not provided
+    if (IsNullUndefined(View))
+        $MissingParameterError(Emitter, Target, View);
+
+    // [ERROR]: Exits when root element (view) is non-element.
+    if (!IsElement(View))
+        $UnexpectedTypeError(Emitter, Target, GetConstructorOrTypeOf(View), "Element");
+
+    /* -- Process -- */
+    // [CONTEXT]: Generate footer navigation container component.
+    const C_Foo = Footer();
+    Mount(View, C_Foo);
+
+    // [CONTEXT]: Generate navigation block component.
+    const C_Nav = Create("nav", { ClassName: "foo-nav" });
+    Mount(C_Foo, C_Nav);
+
+    // [TASK]: Load Navigation Icons
+}

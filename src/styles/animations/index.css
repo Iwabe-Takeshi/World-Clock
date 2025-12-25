@@ -48,8 +48,30 @@
     Text-Slide-Down-Animation
 */
 @keyframes text-slide-down {
+    from {
+        top: 0px;
+        opacity: 1;
+    }
     to {
         top: 20px;
+        opacity: 0;
+    }
+}
+
+/*
+    Opacity-In-Animation
+*/
+@keyframes opacity-in {
+    to {
+        opacity: 1;
+    }
+}
+
+/*
+    Opacity-Out-Animation
+*/
+@keyframes opacity-out {
+    to {
         opacity: 0;
     }
 }

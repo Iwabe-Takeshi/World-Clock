@@ -43,6 +43,23 @@ declare global {
     /**
     * |--------------------------------------------------|
     * |                                                  |
+    * |        Application Runtime Error Listener        |
+    * |            Initialization Intellisense           |
+    * |                                                  |
+    * |--------------------------------------------------|
+    */
+
+    /**
+     * Starts to initialize application's runtime error listeners for
+     * possibilities of uncaught errors being emitted.
+     */
+    function InitRuntimeErrorListener(): Promise<boolean>;
+
+    /* ===============|===============|===============|=============== */
+
+    /**
+    * |--------------------------------------------------|
+    * |                                                  |
     * |    Application User Interface Initialization     |
     * |                   Intellisense                   |
     * |                                                  |
@@ -52,7 +69,7 @@ declare global {
     /**
      * Starts the initialization process for application's interfaces.
      */
-    function InitApplicationInterface(): void;
+    function InitApplicationInterface(): Promise<void>;
 
     /* ===============|===============|===============|=============== */
 
@@ -199,26 +216,6 @@ declare global {
     function SizeOf(arg: any): number;
 
     /**
-     * Executes the specified **function** safely with try-catch block.
-     *
-     * @requires
-     *  - Parameter **Method** to be a valid **function** and also not a **asynchronous** function.
-     *
-     * @param Method - The specified **function** to execute.
-     */
-    function Try(Method: Function): any;
-
-    /**
-     * Executes the specified **asynchronous** **function** safely with try-catch block.
-     *
-     * @requires
-     *  - Parameter **Method** to be a valid **asynchronous** **function**.
-     *
-     * @param Method - The specified **asynchronous** **function** to execute.
-     */
-    function AsyncTry(Method: Function): any;
-
-    /**
      * Clamps the specified number to its **minimum** and **maximum** value it can have.
      *
      * @param val - The specified current value.
@@ -235,25 +232,34 @@ declare global {
     function Clamp(val: number, min: number, max: number): number;
 
     /**
-     * Converts your **object** or **array** data into an iterable array of data.
+     * Returns an enumerable **array** of values of the specified **object**.
      *
-     * @param arg - The specified argument to convert.
+     * @param obj - The specified object of yours or Document Object Model **(DOM)**.
      *
      * @throws
-     *  - An error when parameter **arg** is not provided or invalid, or,
+     *  - An error when parameter **obj** is not provided or invalid, or,
      *    a warning when its empty.
      *
      * @example
-     *  - const obj = { num1: 20, num2: 30, num3: 40, num4: 50 };
-     *    const arr = [10, 20, 30, 40, 50];
-     *    const objVal = Values(obj);
-     *      -> [["num1", 20], ["num2", 30], ["num3", 40], ["num4", 50]]
-     *    const arrVal = Values(arr);
-     *      ->  ArrayIterator<number>
-     *          -> [[0, 10], [1, 20], [2, 30], [3, 40], [4, 50]]
+     *  - const obj = { num1: 10, num2: 20, num3: 30 };
+     *    const objVal = ValuesOf(obj); -> [10, 20, 30]
      */
-    function ValuesOf<V>(arg: { [key: string]: V } | ArrayLike<V>): Array<V>;
-    function ValuesOf<V>(arg: Array<V>): ArrayIterator<V>;
+    function ValuesOf<V>(obj: { [key: string]: V } | ArrayLike<V>): Array<V>;
+
+    /**
+     * Returns an **array** of enumerable values of the specified **array**.
+     *
+     * @param arr - The specified array.
+     *
+     * @throws
+     *  - An error when parameter **arr** is not provided or invalid, or,
+     *    a warning when its empty.
+     *
+     * @example
+     *  - const arr = [10, 20, 30, 40, 50];
+     *    const arrVal = ValuesOf(arr); -> ArrayIterator<number>
+     */
+    function ValuesOf<V>(arr: Array<V>): ArrayIterator<V>;
 
     /* ===============|===============|===============|=============== */
 
@@ -751,7 +757,7 @@ declare global {
          * @example
          *  - GetElement.Id("myBtn"); -> HTMLElement
          */
-        Id(id: string): HTMLElement | null;
+        Id(id: string): Element;
 
         /**
          * Returns the first **DOM** elements that matched the specified **selector**.
@@ -763,8 +769,8 @@ declare global {
          * @example
          *  - GetElement.Selector("button"); -> HTMLButtonElement
          */
-        Selector(selector: string): Element | null;
-        Selector<T extends keyof HTMLElementTagNameMap>(selector: T): HTMLElementTagNameMap[T] | null;
+        Selector(selector: string): Element;
+        Selector<T extends keyof HTMLElementTagNameMap>(selector: T): HTMLElementTagNameMap[T];
 
         /**
          * Returns a live collection of **DOM** elements that matches the specified **selector**.
@@ -813,7 +819,7 @@ declare global {
          * @example
          *  - GetElement.Name("fields"); -> NodeListOf<HTMLElement>
          */
-        Name(name: string): NodeListOf<HTMLElement>;
+        Name(name: string): NodeListOf<Element>;
 
         /**
          * Returns a live collection of **DOM** elements that matches the specified **namespaceURI** and **localName**.
@@ -899,7 +905,7 @@ declare global {
          *    // Retrieve class tokens.
          *    Class.GetTokensOf(myBtn); -> DOMTokenList: ["submitBtn"]
          */
-        GetTokensOf(target: HTMLElement): DOMTokenList;
+        GetTokensOf(target: Element): DOMTokenList;
 
         /**
          * Checks the existence of the specified class token from the target **element** **DOMTokenList**.
@@ -949,7 +955,7 @@ declare global {
          *    // Add class token 'submitBtn'.
          *    Class.AddFrom(myBtn, "submitBtn"); -> DOMTokenList: ["submitBtn"]
          */
-        AddFrom(target: HTMLElement, newToken: string): void;
+        AddFrom(target: Element, newToken: string): void;
 
         /**
          * Adds new specified collection of class tokens for the specified **element**.
@@ -966,7 +972,7 @@ declare global {
          *    // Add class tokens "card" and "fetching".
          *    Class.AddFrom(Card, "card", "fetching"); -> DOMTokenList: ["card", "fetching"]
          */
-        AddFrom(target: HTMLElement, ...newTokens: Array<string>): void;
+        AddFrom(target: Element, ...newTokens: Array<string>): void;
 
         /**
          * Removes the specified class token from the specified target **element**.
@@ -1566,31 +1572,30 @@ declare global {
 
     /**
      * Generates an **HTMLElement** instance with the specified **tag**, and allows you to configure
+     * the element's **attribute** properties, **text content**, and **child node**.
+     *
+     * @param tag - The specified **HTML tag** to generate.
+     * @param { object } [config] - (Optional): The available configuration at generated element.
+     *
+     * @example
+     *  - Create("div", { ClassName: "card", Id: "card-apple", Text: "Apple" }); -> HTMLDivElement
+     */
+    function Create<T extends keyof HTMLElementTagNameMap>(tag: T, config: S_CreateConfig): HTMLElementTagNameMap[T];
+
+    /**
+     * Generates an **HTMLElement** instance with the specified **tag**, and allows you to configure
      * the element's **attribute** properties, **text content**, and **child nodes**.
      *
      * @param tag - The specified **HTML tag** to generate.
-     * @type { Object } config - (Optional): The available configuration for generated element.
-     * @property { string } [ClassNames] - (Optional): The specified class names to set for the generated element.
-     * @property { ChildNode } [Children] - (Optional): The specified child node to mount for the generated element.
-     * @property { string } [Id] - (Optional): The specified unique id to set for the generated element.
-     * @property { string } [Text] - (Optional): The specified text content to set for the generated element.
-     * @property { any } [key: string] - (Optional): Any additional attribute key-value pair to set for the generated element.
+     * @param { Object } config - (Optional): The available configuration at generated element.
      *
      * @example
-     *  - Create("div", { ClassNames: "card", Id: "card-apple" Text: "Apple" }); -> HTMLDivElement
-     *    Create("button", { ClassName: "login", Id: "loginBtn", Text: "Login", "aria-label": "Login Button" }); -> HTMLButtonElement
+     *  - Create("div", { ClassNames: ["card", "i-fresh"], Id: "card-apple" Text: "Apple" }); -> HTMLDivElement
      */
+    function Create<T extends keyof HTMLElementTagNameMap>(tag: T, config: M_CreateConfig): HTMLElementTagNameMap[T];
     function Create(tag: string, config: {}): HTMLElement | HTMLUnknownElement;
-    function Create<T extends keyof HTMLElementTagNameMap>(tag: T, config: {}): HTMLElementTagNameMap[T];
-    function Create<T extends keyof HTMLElementTagNameMap>(tag: T, config?: {
-        ClassNames?: string,
-        Children?: ChildNode,
-        Id?: string,
-        Text?: string,
-        [key: string]: any,
-    }): HTMLElementTagNameMap[T];
 
     /* ===============|===============| END OF FILE |===============|=============== */
 }
 
-export { };
+export {};

@@ -25,6 +25,7 @@ async function InitRuntimeTools() {
             ErrorBuilders.$FailedToLoadRuntimeToolError("InitRuntimeTools", key, obj.Call, obj.Status)
     }
 
+    App.UpdateStates("RuntimeToolsState", true);
     return true;
 }
 

@@ -1,0 +1,11 @@
+.loader.out .loader-icon-block {
+    animation: loader-ani 0.5s var(--def-cubic);
+}
+
+.loader.out .loader-context::before {
+    animation: text-slide-down 0.5s var(--def-cubic) forwards;
+}
+
+.loader.out .loader-subContext::before {
+    animation: opacity-out 0.5s 2s var(--def-cubic) forwards;
+}

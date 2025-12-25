@@ -8,6 +8,17 @@ declare global {
      */
 
     /**
+     * Contains the application's states.
+     */
+    const App: {
+        readonly ComponentsState: boolean;
+        readonly RuntimeToolsState: boolean;
+        readonly RuntimeErrorListenerState: boolean;
+        readonly UpdateStates: (key: "ComponentsState" | "RuntimeToolsState" | "RuntimeErrorListenerState", state: boolean) => void
+        readonly IsReady: () => boolean;
+    }
+
+    /**
      * Shorter access for accessing **document**.
      *
      * usage
@@ -21,24 +32,24 @@ declare global {
      *
      * @example
      *  - {
-     *       // [INFO]: Successfully loaded state.
-     *       "Create": {
+     *      // [INFO]: Successfully loaded state.
+     *      "Create": {
      *          Call: Create,
      *          Status: true
-     *       },
-     *       "IsArray": {
+     *      },
+     *      "IsArray": {
      *          Call: IsArray,
      *          Status: true,
-     *       },
-     *       // [ERROR]: Failed to load state.
-     *       "EachOf": {
+     *      },
+     *      // [ERROR]: Failed to load state.
+     *      "EachOf": {
      *          Call: null,
      *          Status: false,
-     *       }
+     *      }
      *    }
      */
     const RuntimeToolStates: {
-        [runtime_key: string]: {
+        [runtimeKey: string]: {
             Call: unknown;
             Status: boolean;
         }
@@ -55,7 +66,46 @@ declare global {
      *  - StoreState("Create", Create, true);
      */
     const StoreState: <T>(key: string, data: T, state: boolean) => void;
-}
 
+    /**
+     * Stores application's user interface component states.
+     *
+     * @example
+     *  - {
+     *      NAV: {
+     *          Home: {
+     *              Status: true,
+     *              IsIconLoaded: true,
+     *              IsEventAttached: true,
+     *          },
+     *          ...
+     *      },
+     *      VIEW: {
+     *          Panel: {
+     *              Status: true,
+     *          }
+     *      }
+     *    }
+     */
+    const ComponentStates: {
+        NAV: {
+            [ComponentKey: string]: {
+                Block: Element;
+                Status: boolean;
+            } | {
+                Block: Element;
+                IsIconLoaded: boolean;
+                IsEventAttached: boolean;
+                Status: boolean;
+            }
+        },
+        VIEW: {
+            [ComponentKey: string]: {
+                Block: Element;
+                Status: boolean;
+            }
+        }
+    }
+}
 
 export {}

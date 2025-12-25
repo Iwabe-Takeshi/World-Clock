@@ -1,5 +1,10 @@
 /**
- * Returns the constructor of the argument or type when constructor is not found.
+ * Retrieves the **constructor** of specified argument or else **type**.
+ *
+ * @param arg - The specified argument value or data to retrieve its constructor or type.
+ *
+ * @example
+ *  - GetConstructorOrTypeOf("Some Text"); -> "String"
  */
 export function GetConstructorOrTypeOf(arg: any): string {
     if (!arg)
@@ -9,50 +14,22 @@ export function GetConstructorOrTypeOf(arg: any): string {
 }
 
 /**
- * Writes a static debug message outputs to console.
- */
-export function DEBUG(...data: any[]): void {
-    console.debug(...data);
-}
-
-/**
- * Writes a static error message outputs to console.
- */
-export function ERROR(...data: any[]): void {
-    console.error(...data);
-}
-
-/**
- * Writes a static message outputs to console.
- */
-export function LOG(...data: any[]): void {
-    console.log(...data);
-}
-
-/**
- * Writes a static warning message outputs to console.
- */
-export function WARN(...data: any[]): void {
-    console.warn(...data);
-}
-
-/**
- * Returns the current date & time of your local machine in localeString format.
+ * Returns the current **date** and **time** of your local device machine in **localeString** format.
  */
 export function LocaleDateTime(): string {
     return new Date().toLocaleString();
 }
 
 /**
- * Returns a boolean result whether if the specified argument have the specified `@key` of property or method.
+ * Returns an **object** collection for **Supported** and **NotSupported** for every specified keys of property or method from **searchThisKey**.
  *
- * Note:
- *  - Does not accept multiple argument, or else it will be treated as `@searchThisKeys` item.
- *  - Accepts multiple keys by separating them with coma, and then check and return the found
- *    list for `@supported` and `@notSupported` property.
+ * @param arg - The specified argument to check for its supported properties or methods.
+ * @param searchThisKey - The specified list of keys to check at target **argument** supported properties or methods.
+ *
+ * @throws **false** as default response when parameter **arg** or **searchThisKey** ar not provided.
  *
  * @example
- *  - SupportProps("Some Text", "length", "name"): [["Supported", ["length"]], ["NotSupported", ["name"]]]
+ *  - In("Some Text", "length", "substring", "trim", "name"); -> { Supported: ["length", "substring", "trim"], NotSupported: ["name"] }
  */
 export function In(arg: any, ...searchThisKeys: string[]): { Supported: string[], NotSupported: string[] } | boolean {
     /* -- Filter `@searchThisKeys` -- */
@@ -81,12 +58,12 @@ export function In(arg: any, ...searchThisKeys: string[]): { Supported: string[]
 }
 
 /**
- * Returns the `@name` property value of the specified argument.
+ * Returns the **name** property value of the specified argument.
  *
- * @param arg - The specified argument to retrieve its `@name` property.
+ * @param arg - The specified argument to retrieve its **name** property.
  *
  * @throws
- *  - A `@warning` and default response value of `(@Anonymous)` when the specified `@argument` does not have or `@support` the `@name` property.
+ *  - A **warning** and default response value of **(Anonymous)** when the specified **argument** does not have or **support** the **name** property.
  */
 export function NameOf(arg: any): string {
     /* -- Check if @name property is supported -- */
@@ -100,19 +77,16 @@ export function NameOf(arg: any): string {
 }
 
 /**
- * Returns the length of specified argument.
+ * Returns the **length** property value of specified argument.
  *
- * Note:
- *  - If the specified argument does not support or have `@length` property, it will
+ * ***Note***:
+ *  - If the specified argument does not have or support **length** property, it will
  *    automatically return -1 as invalid response.
  *
- * @throws
- *  - A warning when the specified '@argument' have NaN or not-number type value at property '@length', with a default
- *    response value of -1.
+ * @param arg - The specified argument to retrieve its **length** property value.
  *
  * @example
- *  - Length([1, 2, 3]): 3 |
- *    Length({ nums: [1, 2, 3] }): -1
+ *  - Length([1, 2, 3]); -> 3
  */
 export function LengthOf(arg: any): number {
     if (!In(arg, "length")) {
@@ -124,19 +98,16 @@ export function LengthOf(arg: any): number {
 }
 
 /**
- * Returns the `@size` of specified argument.
+ * Returns the **size** property value of specified argument.
  *
- * Note:
- *  - If the specified argument does not support or have `@size` property, it will
+ * ***Note***:
+ *  - If the specified argument does not have or support **size** property, it will
  *    automatically return -1 as invalid response.
  *
- * @throws
- *  - A warning when the specified '@argument' have NaN or not-number type value at property '@size', with a default
- *    response value of -1.
+ * @param arg - The specified argument to retrieve its **size** property value.
  *
  * @example
- *  - SizeOf(new Map([[...], [...]])): 2 |
- *    SizeOf(new Set([{...}])): 1
+ *  - SizeOf(new Map([[...], [...]])); -> 2
  */
 export function SizeOf(arg: any): number {
     if (!In(arg, "size")) {
@@ -148,59 +119,7 @@ export function SizeOf(arg: any): number {
 }
 
 /**
- * Executes the specified function safely with try-catch block.
- *
- * @param Method - The function to execute safely.
- */
-export function Try(Method: Function) {
-    try {
-        /* -- Validation -- */
-        const Emitter = NameOf(Method), Target = "Method";
-
-        if (!IsFunc(Method))
-            $UnexpectedTypeError(Emitter, Target, GetConstructorOrTypeOf(Method), "Function");
-
-        /* -- Execution -- */
-        return Method();
-    } catch (err) {
-        ERROR(`Try(@${NameOf(Method)}): An unexpected error occurred! Error: ${err}`);
-        return err;
-    }
-}
-
-/**
- * Executes the specified asynchronous function safely with try-catch block.
- *
- * @param AsyncMethod - The asynchronous function to execute safely.
- */
-export function AsyncTry(AsyncMethod: Function) {
-    try {
-        /* -- Validation -- */
-        const Emitter = NameOf(AsyncMethod), Target = "AsyncMethod";
-
-        if (AsyncMethod.constructor.name !== "AsyncFunction")
-            $UnexpectedTypeError(Emitter, Target, GetConstructorOrTypeOf(AsyncMethod), "AsyncFunction");
-
-        return new Promise(async (resolve, eject) => {
-            const Status = await AsyncMethod();
-
-            /* -- Status: Success -- */
-            if (Status) {
-                resolve(Status);
-                return;
-            }
-
-            /* -- Status: Failed -- */
-            eject(Status);
-        });
-    } catch (err) {
-        ERROR(`AsyncTry(@${NameOf(AsyncMethod)}): An unknown error occurred! Error:`, err);
-        return err;
-    }
-}
-
-/**
- * Clamps the specified number to its **@minimum** and **@maximum** value it can have.
+ * Clamps the specified number to its **minimum** and **maximum** value it can have.
  *
  * @param val - The specified current value.
  * @param min - The specified minimum value it can have.
@@ -210,8 +129,8 @@ export function AsyncTry(AsyncMethod: Function) {
  *  - A number value '0' as invalid response, when any of the parameters are not a valid number.
  *
  * @example
- *  - Clamp(-13, 0, 5): 0 |
- *    Clamp(10, 0, 5): 5
+ *  - Clamp(-13, 0, 5); -> 0
+ *    Clamp(10, 0, 5); -> 5
  */
 export function Clamp(val: number, min: number, max: number): number {
     /* -- Validation -- */
@@ -228,21 +147,18 @@ export function Clamp(val: number, min: number, max: number): number {
  * @param arg - The specified argument to convert.
  *
  * @throws
- *  - An error when parameter **@arg** is not provided or invalid, or,
+ *  - An error when parameter **arg** is not provided or invalid, or,
  *    a warning when its empty.
  *
  * @example
- *  - const obj = { num1: 20, num2: 30, num3: 40, num4: 50 };
+ *  - const obj = { num1: 10, num2: 20, num3: 30 };
  *    const arr = [10, 20, 30, 40, 50];
- *    const objVal = Values(obj);
- *      -> [["num1", 20], ["num2", 30], ["num3", 40], ["num4", 50]]
- *    const arrVal = Values(arr);
- *      ->  ArrayIterator<number>
- *          -> [[0, 10], [1, 20], [2, 30], [3, 40], [4, 50]]
+ *    const objVal = Values(obj); -> [10, 20, 30]
+ *    const arrVal = Values(arr); -> ArrayIterator<number>
+ *                                -> [10, 20, 30, 40, 50]
  */
 export function ValuesOf<V>(arg: (({ [key: string]: V } | ArrayLike<V>) | Array<V>)) {
     /* -- Validation -- */
-
     // [ERROR]: Exits when parameter @arg is not provided.
     if (IsNullUndefined(arg)) {
         ERROR(`ValuesOf(): Expects an argument of object or array to convert! (Exited with [])`);
@@ -263,4 +179,32 @@ export function ValuesOf<V>(arg: (({ [key: string]: V } | ArrayLike<V>) | Array<
 
     /* -- Process & Result -- */
     return IsArray(arg) ? arg.values() : IsObj(arg) ? Object.values(arg) : ([] as any);
+}
+
+/**
+ * Writes a static debug message outputs to console.
+ */
+export function DEBUG(...data: any[]): void {
+    console.debug(...data);
+}
+
+/**
+ * Writes a static error message outputs to console.
+ */
+export function ERROR(...data: any[]): void {
+    console.error(...data);
+}
+
+/**
+ * Writes a static message outputs to console.
+ */
+export function LOG(...data: any[]): void {
+    console.log(...data);
+}
+
+/**
+ * Writes a static warning message outputs to console.
+ */
+export function WARN(...data: any[]): void {
+    console.warn(...data);
 }

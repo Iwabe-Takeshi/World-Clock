@@ -28,11 +28,6 @@
     border-radius: 5px;
     rotate: 0deg;
     scale: 0;
-    animation: loader-ani 1.5s 0.5s ease-in-out infinite;
-}
-
-.loader-icon-block:nth-child(2) {
-    animation-delay: calc(2s / 2);
 }
 
 .loader-context {
@@ -51,7 +46,6 @@
     width: max-content;
     top: 20px;
     opacity: 0;
-    animation: text-slide-up 0.5s var(--def-cubic) forwards;
 }
 
 .loader-subContext {
@@ -65,7 +59,9 @@
 .loader-subContext::before {
     content: "Please wait.";
     font-size: 10pt;
-    top: 20px;
     opacity: 0;
-    animation: text-slide-up 0.5s 1s var(--def-cubic) forwards;
+}
+
+.loader-context.out {
+    animation: text-slide-down 0.5s var(--def-cubic) forwards;
 }

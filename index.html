@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="src/styles/default.css">
     <link rel="stylesheet" href="src/styles/states/active.css">
     <link rel="stylesheet" href="src/styles/states/hover.css">
+    <link rel="stylesheet" href="src/styles/states/in.css">
+    <link rel="stylesheet" href="src/styles/states/out.css">
     <link rel="stylesheet" href="src/styles/ui/footer.css">
     <link rel="stylesheet" href="src/styles/ui/loader.css">
     <script type="module" src="app/scripts/index.js" async></script>
@@ -18,7 +20,7 @@
 
 <body>
     <div id="view">
-        <div class="loader">
+        <div class="loader in" style="display: none;">
             <div class="loader-icon">
                 <i class="loader-icon-block"></i>
                 <i class="loader-icon-block"></i>
@@ -27,7 +29,7 @@
             <i class="loader-context"></i>
             <span class="loader-subContext"></span>
         </div>
-        <main class="contents" id="live-view">
+        <main class="contents" id="live-panel">
         </main>
         <footer class="foo-cont">
             <nav class="foo-nav">

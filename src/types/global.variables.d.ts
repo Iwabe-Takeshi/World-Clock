@@ -106,6 +106,23 @@ declare global {
             }
         }
     }
+
+    /**
+     * SVG icon paths used in this application.
+     * Source: (https://fonts.google.com/icons)
+     */
+    const SVGPaths: {
+        Settings: string,
+        Clock: string,
+        Home: string,
+        Book: string,
+        Apps: string,
+    }
+
+    /**
+     * Holds the active or previous page.
+     */
+    var ActiveNavigationPage: Element;
 }
 
 export {}

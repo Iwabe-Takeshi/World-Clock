@@ -1,5 +1,5 @@
 .loader.out .loader-icon-block {
-    animation: loader-ani 0.5s var(--def-cubic);
+    opacity: 0;
 }
 
 .loader.out .loader-context::before {

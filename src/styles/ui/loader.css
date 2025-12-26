@@ -28,6 +28,8 @@
     border-radius: 5px;
     rotate: 0deg;
     scale: 0;
+    opacity: 1;
+    transition: opacity 0.5s var(--def-cubic);
 }
 
 .loader-context {

@@ -20,7 +20,7 @@ declare global {
     /**
      * Starts the **application** initialization process.
      */
-    function InitApp(): { Status: boolean, StatusData: unknown };
+    function InitApp(): Promise<void>;
 
     /* ===============|===============|===============|=============== */
 
@@ -36,7 +36,7 @@ declare global {
     /**
      * Starts the initialization process for runtime tools.
      */
-    function InitRuntimeTools(): Promise<boolean>;
+    function InitRuntimeTools(): Promise<void>;
 
     /* ===============|===============|===============|=============== */
 
@@ -53,7 +53,7 @@ declare global {
      * Starts to initialize application's runtime error listeners for
      * possibilities of uncaught errors being emitted.
      */
-    function InitRuntimeErrorListener(): Promise<boolean>;
+    function InitRuntimeErrorListener(): Promise<void>;
 
     /* ===============|===============|===============|=============== */
 
@@ -260,6 +260,74 @@ declare global {
      *    const arrVal = ValuesOf(arr); -> ArrayIterator<number>
      */
     function ValuesOf<V>(arr: Array<V>): ArrayIterator<V>;
+
+    /**
+     * Delays the execution of the program underneath of this delay method.
+     * Similar to Java's `sleep()` method.
+     *
+     * @param ms - The specified duration of execution delay.
+     *
+     * @example
+     *  - LOG(1);
+     *    await Delay(1000);
+     *    LOG(2); // Delayed by 1 second before being executed.
+     */
+    function Delay(ms: number): Promise<unknown>;
+
+    /**
+     * Returns the build property rule with set of rules for an **object**.
+     *
+     * @param key - The access key of a property.
+     * @param data - The data to assign at specified property key.
+     * @param mutable - (Optional): Set a rule from the assigned property value whether if its changeable/mutable.
+     * @param configurable - (Optional): Set a rule whether if the property is removable or can be re-define.
+     * @param enumerable - (Optional): Set a rule from the assigned property whether if its enumerable from loop methods.
+     */
+    function BuildPropertyRule<K extends string, D>(key: K, data: D, mutable?: boolean, configurable?: boolean, enumerable?: boolean): Record<K, D>;
+
+    /**
+     * Returns the build properties with set of rule for an **object**.
+     *
+     * @param keys - The collection of property keys.
+     * @param values - The collection of data to assigned from property keys collection.
+     * @param mutable - (Optional): Set a rule from each assigned property value whether if its changeable/mutable.
+     * @param configurable - (Optional): Set a rule from each property key whether if its removable or can be re-define.
+     * @param enumerable - (Optional): Set a rule from each assigned property value whether if its enumerable from loop methods.
+     */
+    function BuildPropertiesRule<K extends string, D>(keys: Array<string>, values: Array<D>, mutable?: boolean, configurable?: boolean, enumerable?: boolean): Record<K, D>;
+
+    /* ===============|===============|===============|=============== */
+
+    /**
+    * |--------------------------------------------------|
+    * |                                                  |
+    * |         Application Loader Intellisense          |
+    * |                                                  |
+    * |--------------------------------------------------|
+    */
+
+    /**
+     * Contains the **start** and **end** method for **loader**.
+     */
+    const Loader: {
+        /**
+         * Holds the **container** and **context** of a loader component.
+         */
+        readonly Component: {
+            readonly Container?: Element;
+            readonly Context?: Element;
+        };
+
+        /**
+         * Starts the loader animation with the specified context.
+         */
+        Start(Context?: string): Promise<void>;
+
+        /**
+         * Stops the loader animation.
+         */
+        End(): Promise<void>;
+    }
 
     /* ===============|===============|===============|=============== */
 

@@ -1,5 +1,3 @@
-// [TASK]: Generate a centralized generator for navigation interface.
-
 import Footer from './container.js';
 import Icon from './icon.js';
 
@@ -8,7 +6,6 @@ import Icon from './icon.js';
  */
 export default async function NAV(View: Element) {
     const Emitter = NameOf(NAV), Target = "View";
-    const Loader = GetElement.Id("loader");
 
     // [ERROR]: Exits when root element (view) is not provided
     if (IsNullUndefined(View))
@@ -26,16 +23,15 @@ export default async function NAV(View: Element) {
     // [CONTEXT]: Generate navigation block component.
     const C_Nav = Create("nav", { ClassName: "foo-nav" });
     Mount(C_Foo, C_Nav);
-    ComponentStates.NAV["Block"] = {
-        Block: C_Nav,
-        Status: true
-    }
+    // @ts-ignore
+    ComponentStates.NAV["Inner"] = BuildPropertiesRule(["Block", "Status"], [C_Nav, true], false, true, true);
 
     // [TASK]: Load Navigation Icons.
     const IDs = [
         ["settings", "Settings", "Settings"], ["dashboard", "Clock", "Date & Time"],
         ["home", "Home", "Home"], ["guide", "Book", "Guide"], ["tools", "Apps", "Tools"]
     ] as const;
+
     for (const [Id, iconKey, title] of IDs) {
         let state = true, iconState = false, eventState = false;
         const block = Create("i", { ClassName: "foo-nav-i", Id: `nav-${Id}` });
@@ -56,12 +52,11 @@ export default async function NAV(View: Element) {
         if (iconState)
             Mount(span, iconElement);
 
-        ComponentStates.NAV[Id] = {
-            Block: block,
-            IsIconLoaded: iconState,
-            IsEventAttached: eventState,
-            Status: state
-        }
+        // @ts-ignore
+        ComponentStates.NAV[Id] = BuildPropertyRule("Block", block, false);
+
+        // @ts-ignore
+        ComponentStates.NAV[Id] = BuildPropertiesRule(["IsIconLoaded", "IsEventAttached", "Status"], [iconState, eventState, state]);
     }
 
     // [INFO]: Checking component states at @ComponentStates.
@@ -71,12 +66,4 @@ export default async function NAV(View: Element) {
                 throw new Error(`NAV(): Failed to load component '${item.Block}'! (Exited)`);
         }
     }
-
-    // [ERROR]: Exits when element loader is not found or invalid.
-    if (!IsElement(Loader))
-        $UnexpectedTypeError(Emitter, "[VAR]: Loader", GetConstructorOrTypeOf(Loader), "Element");
-
-    // [CONTEXT]: Loader OUT animation and removal.
-    setTimeout(() => Class.AddFrom(Loader, "out"), 2000);
-    setTimeout(() => Unmount(Loader), 2500);
 }

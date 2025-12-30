@@ -4,7 +4,7 @@ import Runtime from '../variables/global.js';
  * Starts to initialize application's runtime error listeners for possibilities of
  * uncaught errors being emitted.
  */
-async function InitRuntimeErrorListener() {
+async function InitRuntimeErrorListener(): Promise<void> {
     /**
      * Event for catching emitted errors that is not caught.
      */
@@ -24,7 +24,7 @@ async function InitRuntimeErrorListener() {
     });
 
     // [CONTEXT]: Success Initialization Response.
-    App.UpdateStates("RuntimeErrorListenerState", true);
+    App.UpdateState("RuntimeErrorListenerState", true);
 }
 
 /* -- @ApplicationRuntimeErrorListener -- */

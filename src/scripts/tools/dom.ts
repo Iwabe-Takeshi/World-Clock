@@ -1,12 +1,4 @@
 /**
- * |--------------------------------------------------|
- * |                                                  |
- * |           Document Object Model Tools            |
- * |                                                  |
- * |--------------------------------------------------|
- */
-
-/**
  * Contains **DOM** elements retrieval methods.
  */
 export const GetElement = {

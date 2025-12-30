@@ -1,4 +1,4 @@
-/* -- Imports -- */
+import "../tools/loader.states.js";
 import "../tools/runtime.registry.js";
 import "../../error/base.js";
 import "./init.global.js";
@@ -7,20 +7,26 @@ import "./init.interface.js";
 import RunTime from "../variables/global.js";
 
 /**
- * Starts the `@application` initialization process.
+ * Starts the **application** initialization process.
  */
 async function InitApp() {
     try {
+        /* -- @StartLoader -- */
+        await Loader.Start("Loading Application Contents...");
+
         /* -- @LoadRuntimeTools -- */
         await InitRuntimeTools();
 
         /* -- @InitializeRuntimeErrorListener -- */
         await InitRuntimeErrorListener();
 
-        // [CONTEXT]: Load application's interface when runtime tools is successfully loaded.
+        /* -- @InitializeApplicationInterfaces -- */
         await InitApplicationInterface();
     } catch (err) {
-        throw err;
+        console.error(`InitApp(): Failed to initialize application contents! Error: ${err}`);
+    } finally {
+        /* -- @StopLoader -- */
+        await Loader.End();
     }
 }
 

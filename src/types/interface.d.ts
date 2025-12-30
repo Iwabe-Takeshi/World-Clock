@@ -10,3 +10,12 @@ interface ErrorBaseContent<OtherPropertyData extends {} = {}> {
     } & OtherPropertyData;
     Guide: string;
 }
+
+/* -- Icon Meta -- */
+interface IconMeta {
+    Height?: number,
+    Width?: number,
+    ViewBox?: string | "0 -960 960 960",
+    Fill?: string | "#000",
+    Path: string,
+}

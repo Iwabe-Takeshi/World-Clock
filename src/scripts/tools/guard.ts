@@ -1,13 +1,3 @@
-/* ===============|===============| START OF FILE |===============|=============== */
-
-/**
- * |--------------------------------------------------|
- * |                                                  |
- * |              Global Guarding Tools               |
- * |                                                  |
- * |--------------------------------------------------|
- */
-
 /**
  * Returns boolean result whether if the specified value is null or undefined.
  *
@@ -316,5 +306,3 @@ export function IsBool(...args: Array<any>): boolean {
 
     return args.every(arg => typeof arg === "boolean" || arg.constructor === Boolean || arg instanceof Boolean);
 }
-
-/* ===============|===============| END OF FILE |===============|=============== */

@@ -1,4 +1,3 @@
-/* -- Imports -- */
 import * as Errors from "../../error/custom.js";
 import * as ErrorBuilders from "../../error/builder.js";
 import * as Guards from "../tools/guard.js";
@@ -7,7 +6,7 @@ import * as ArrayTools from "../tools/array.js";
 import * as DOMS from "../tools/dom.js";
 import Runtime from "../variables/global.js";
 
-async function InitRuntimeTools() {
+async function InitRuntimeTools(): Promise<void> {
     // [CONTEXT]: Runtime tools module.
     const Modules = [Errors, ErrorBuilders, Guards, Tools, ArrayTools, DOMS];
 
@@ -25,8 +24,7 @@ async function InitRuntimeTools() {
             ErrorBuilders.$FailedToLoadRuntimeToolError("InitRuntimeTools", key, obj.Call, obj.Status)
     }
 
-    App.UpdateStates("RuntimeToolsState", true);
-    return true;
+    App.UpdateState("RuntimeToolsState", true);
 }
 
 /* -- @ApplicationGlobalToolsInitialization -- */

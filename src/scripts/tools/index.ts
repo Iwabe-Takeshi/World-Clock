@@ -182,6 +182,108 @@ export function ValuesOf<V>(arg: (({ [key: string]: V } | ArrayLike<V>) | Array<
 }
 
 /**
+ * Returns the build property rule with set of rules for an **object**.
+ *
+ * @param key - The access key of a property.
+ * @param data - The data to assign at specified property key.
+ * @param mutable - (Optional): Set a rule from the assigned property value whether if its changeable/mutable.
+ * @param configurable - (Optional): Set a rule whether if the property is removable or can be re-define.
+ * @param enumerable - (Optional): Set a rule from the assigned property whether if its enumerable from loop methods.
+ */
+export function BuildPropertyRule<K extends string, D>(key: K, data: D, mutable?: boolean, configurable?: boolean, enumerable?: boolean): Record<K, D> {
+    /* -- Validation -- */
+    const Emitter = NameOf(BuildPropertyRule), Targets = ["key", "data", "mutable", "configurable", "enumerable"];
+
+    // [ERROR]: Exits when there property key is not provided or invalid.
+    if (IsNullUndefined(key))
+        $MissingParameterError(Emitter, Targets[0], key);
+
+    if (!IsString(key))
+        $UnexpectedTypeError(Emitter, Targets[0], GetConstructorOrTypeOf(key), "String");
+
+    // [ERROR]: Exits when the specified rules toggle value are invalid.
+    EachOf([mutable, configurable, enumerable], (rule, pos) => {
+        if (!IsNullUndefined(rule) && !IsBool(rule))
+            $UnexpectedTypeError(Emitter, Targets[pos + 2], GetConstructorOrTypeOf(rule), "Boolean");
+    });
+
+    /* -- Process -- */
+    return Object.defineProperty({}, key, {
+        value: data,
+        writable: mutable ?? true,
+        configurable: configurable ?? true,
+        enumerable: enumerable ?? true
+    }) as Record<K, D>;
+}
+
+/**
+ * Returns the build properties with set of rule for an **object**.
+ *
+ * @param keys - The collection of property keys.
+ * @param values - The collection of data to assigned from property keys collection.
+ * @param mutable - (Optional): Set a rule from each assigned property value whether if its changeable/mutable.
+ * @param configurable - (Optional): Set a rule from each property key whether if its removable or can be re-define.
+ * @param enumerable - (Optional): Set a rule from each assigned property value whether if its enumerable from loop methods.
+ */
+export function BuildPropertiesRule<K extends string, D>(keys: Array<K>, values: Array<D>, mutable?: boolean, configurable?: boolean, enumerable?: boolean): Record<K, D> {
+    /* -- Validation -- */
+    const Emitter = NameOf(BuildPropertiesRule), Targets = ["keys", "values", "mutable", "configurable", "enumerable"], P = [keys, values];
+
+    // [ERROR]: Exits when parameter @keys and @values are invalid.
+    EachOf(P, (data, pos) => {
+        if (!IsArray(data))
+            $UnexpectedTypeError(Emitter, Targets[pos], GetConstructorOrTypeOf(data), `Array<${pos > 0 ? "Any" : "String"}>`);
+    });
+
+    // [WARNING]: Exits and warn when there are no keys and values provided.
+    if (LengthOf(keys) <= 0 || LengthOf(values) <= 0) {
+        WARN(`BuildPropertiesRule(@keys, @values): Expects for both parameter @keys and @values to at least have 1 or more data! (Exited with {})`);
+        return {} as Record<K, D>;
+    }
+
+    // [ERROR]: Exits when parameter @keys and @values lengths are not match.
+    EachOf(P, (data, pos, arr) => {
+        const otherPos = pos > 0 ? 0 : 1;
+        if (LengthOf(data) !== LengthOf(arr[otherPos]))
+            $MismatchArrayLengthError(Emitter, Targets[pos], LengthOf(data), LengthOf(arr[otherPos]));
+    });
+
+    // [ERROR]: Exits when the specified rules toggle value are invalid.
+    EachOf([mutable, configurable, enumerable], (rule, pos) => {
+        if (!IsNullUndefined(rule) && !IsBool(rule))
+            $UnexpectedTypeError(Emitter, Targets[pos + 2], GetConstructorOrTypeOf(rule), "Boolean");
+    });
+
+    /* -- Process -- */
+    const result = {};
+    for (const [pos, key] of keys.entries()) {
+        // [WARNING]: Skips and warn non-string key.
+        if (!IsString(key)) {
+            WARN(`BuildPropertiesRule(@keys['${key}']: non-string): Expects a string-format for property id! (Skipped)`);
+            continue;
+        }
+
+        Object.defineProperty(result, key, {
+            value: values[pos],
+            writable: mutable ?? true,
+            configurable: configurable ?? true,
+            enumerable: enumerable ?? true,
+        });
+    }
+
+    return result as Record<K, D>;
+}
+
+/**
+ * Delays the execution of the program underneath of this delay method.
+ */
+export async function Delay(ms: number): Promise<unknown> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+// export const Delay = (ms: number): Promise<unknown> =>
+    // new Promise(resolve => setTimeout(resolve, ms));
+
+/**
  * Writes a static debug message outputs to console.
  */
 export function DEBUG(...data: any[]): void {

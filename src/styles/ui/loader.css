@@ -43,7 +43,7 @@
 }
 
 .loader-context::before {
-    content: "Loading Application Contents...";
+    content: attr(context);
     position: absolute;
     width: max-content;
     top: 20px;
@@ -62,8 +62,4 @@
     content: "Please wait.";
     font-size: 10pt;
     opacity: 0;
-}
-
-.loader-context.out {
-    animation: text-slide-down 0.5s var(--def-cubic) forwards;
 }

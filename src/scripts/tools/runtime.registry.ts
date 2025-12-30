@@ -1,12 +1,3 @@
-/**
- * |-----------------------------------------------------|
- * |                                                     |
- * |            Global Accessibility Handler             |
- * |                                                     |
- * |-----------------------------------------------------|
- */
-
-/* -- Modules -- */
 import Runtime from "../variables/global.js";
 
 /**
@@ -61,8 +52,19 @@ function Register(accessKeys: string | Array<string>, ...values: Array<any>): vo
                 continue;
             }
 
+            // [WARNING]: Skips and warn when key is already existing to runtime.
+            if (Runtime[key]) {
+                console.warn(`Register(@accessKey['${key}']: Duplicated-Entry): Key '${key}' is already registered to runtime! (Skipped)`);
+                continue;
+            }
+
             // [CONTEXT]: Store key and its value to application's runtime.
-            Runtime[key] = values[pos];
+            Object.defineProperty(Runtime, key, {
+                value: values[pos],
+                writable: false,
+                configurable: false,
+                enumerable: false
+            })
 
             // [CONTEXT]: Store success registry state to @RuntimeToolStates
             StoreState(key, values[pos], true);
@@ -72,19 +74,30 @@ function Register(accessKeys: string | Array<string>, ...values: Array<any>): vo
 
         // [ERROR]: Notify and skip invalid access key.
         if (typeof key !== "string" || key.constructor !== String) {
-            console.error(`Register(@accessKey: Non-String): Expects an access key to be in string format! (Registry Failed & Skipped)`);
+            console.error(`Register(@${key}: Non-String): Expects an access key to be in string format! (Registry Failed & Skipped)`);
 
             // [CONTEXT]: Store failed key state to @RuntimeToolStates
             StoreState(String(key), value, false);
             return;
         }
 
+        // [WARNING]: Exits and warn when access key is already registered to runtime.
+        if (Runtime[key]) {
+            console.warn(`Register(@${key}: Duplicated-Entry): Key '${key}' is already registered to runtime! (Exited)`);
+            return;
+        }
+
         // [CONTEXT]: Store key and its value to application's runtime.
-        Runtime[key] = value;
+        Object.defineProperty(Runtime, key, {
+            value: value,
+            writable: false,
+            configurable: false,
+            enumerable: false
+        });
 
         // [CONTEXT]: Store success registry state to @RuntimeToolStates
         StoreState(key, value, true);
-    } 
+    }
 }
 
 /* -- @ApplicationRuntimeRegistry -- */

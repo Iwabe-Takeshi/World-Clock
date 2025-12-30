@@ -17,11 +17,11 @@ export default function Panel() {
     if (panel instanceof HTMLSpanElement && Class.ExistsAt(panel, "-warn", "-notif"))
         state = false;
 
-    // [CONTEXT]: Store state of panel at @ComponentStates -> VIEW
-    ComponentStates.VIEW["Panel"] = {
-        Block: panel,
-        Status: state,
-    }
+    // @ts-ignore
+    ComponentStates.VIEW["Panel"] = BuildPropertyRule("Block", panel, false);
+
+    // @ts-ignore
+    ComponentStates.VIEW["Panel"] = BuildPropertyRule("Status", state);
 
     return panel;
 }

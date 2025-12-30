@@ -10,13 +10,7 @@ declare global {
     /**
      * Contains the application's states.
      */
-    const App: {
-        readonly ComponentsState: boolean;
-        readonly RuntimeToolsState: boolean;
-        readonly RuntimeErrorListenerState: boolean;
-        readonly UpdateStates: (key: "ComponentsState" | "RuntimeToolsState" | "RuntimeErrorListenerState", state: boolean) => void
-        readonly IsReady: () => boolean;
-    }
+    const App: AppConfig;
 
     /**
      * Shorter access for accessing **document**.
@@ -25,7 +19,7 @@ declare global {
      *  - Instead of **document** or **window.document** to access web page contents,
      *    you can now just type **DOM** instead for shorter access.
      */
-    const DOM: Document
+    const DOM: Document;
 
     /**
      * Stores status of **application** runtime tools.
@@ -123,6 +117,14 @@ declare global {
      * Holds the active or previous page.
      */
     var ActiveNavigationPage: Element;
+
+    /**
+     * Holds the **root** element which is where the application contents being loaded.
+     *
+     * **Note**
+     *  - Default to **'body'** element when **'div#view'** element is not found.
+     */
+    const View: HTMLElement | HTMLBodyElement;
 }
 
 export {}

@@ -47,3 +47,14 @@ type S_CreateConfig = {
      */
     [attrKey: string]: any;
 }
+
+/* -- App COnfigurations -- */
+type AppConfig = {
+    ComponentsState?: boolean;
+    EventsState?: boolean;
+    RuntimeErrorListenerState?: boolean;
+    RuntimeToolsState?: boolean;
+    UpdateState(key: "ComponentsState" | "RuntimeErrorListenerState" | "RuntimeToolsState", state: boolean): void;
+    IsReady(): boolean;
+}
+type AppStatesConfigKeys = "ComponentsState" | "EventsState" | "RuntimeErrorListenerState" | "RuntimeToolsState";

@@ -1,11 +1,6 @@
-interface IconMeta {
-    Height?: number,
-    Width?: number,
-    ViewBox?: string | "0 -960 960 960",
-    Fill?: string | "#000",
-    Path: string,
-}
-
+/**
+ * Generates a class for SVGIcon with given attributes.
+ */
 export default class Icon {
     Height? = 30;
     Width? = 30;

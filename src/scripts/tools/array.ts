@@ -1,12 +1,4 @@
 /**
- * |--------------------------------------------------|
- * |                                                  |
- * |               Runtime Array Tools                |
- * |                                                  |
- * |--------------------------------------------------|
- */
-
-/**
  * Performs the method specified to each elements of an `@array`.
  *
  * ***Note***:

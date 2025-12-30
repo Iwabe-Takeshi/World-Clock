@@ -6,13 +6,11 @@ import Runtime from '../variables/global.js';
  * Starts the process for initializing application's interfaces.
  */
 async function InitApplicationInterface() {
-    // [CONTEXT]: Retrieve root (view) element at body -> div#view
-    let View = GetElement.Id("view");
+    const Emitter = NameOf(InitApplicationInterface);
 
-    // [INFO]: Check if view element is not found or existing.
-    if (IsNullUndefined(View))
-        // [CONTEXT]: Set to body as default root element.
-        View = GetElement.Selector("body");
+    // [CONTEXT]: Validate View (root) element.
+    if (!IsHTMLElement(View))
+        $UnexpectedTypeError(Emitter, "(Global Variable): View", GetConstructorOrTypeOf(View), "HTMLElement | HTMLBodyElement");
 
     // [CONTEXT]: Generate and mount panel component for displaying contents of pages to root element.
     const C_Panel = Panel();

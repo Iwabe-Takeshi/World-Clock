@@ -13,10 +13,8 @@ export default function Footer() {
     if (foo instanceof HTMLSpanElement && Class.ExistsAt(foo, "-warn", "-notif"))
         state = false;
 
-    ComponentStates.NAV["Container"] = {
-        Block: foo,
-        Status: state
-    }
+    // @ts-ignore
+    ComponentStates.NAV["Main"] = BuildPropertiesRule(["Block", "Status"], [foo, state], false);
 
     return foo;
 }

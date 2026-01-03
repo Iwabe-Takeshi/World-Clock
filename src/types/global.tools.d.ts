@@ -74,6 +74,21 @@ declare global {
     /* ===============|===============|===============|=============== */
 
     /**
+    * |--------------------------------------------------|
+    * |                                                  |
+    * |  Application Events Initialization Intellisense  |
+    * |                                                  |
+    * |--------------------------------------------------|
+    */
+
+    /**
+     * Start the initialization process for events of application contents.
+     */
+    function InitEvents(): Promise<void>;
+
+    /* ===============|===============|===============|=============== */
+
+    /**
      * |--------------------------------------------------|
      * |                                                  |
      * |     Global Accessibility Maker Intellisense      |
@@ -275,26 +290,30 @@ declare global {
     function Delay(ms: number): Promise<unknown>;
 
     /**
-     * Returns the build property rule with set of rules for an **object**.
+     * Build and assign a set of rules of the specified **property key** and its **data**, and store
+     * them from the specified parent **object**.
      *
+     * @param obj - The parent object.
      * @param key - The access key of a property.
      * @param data - The data to assign at specified property key.
      * @param mutable - (Optional): Set a rule from the assigned property value whether if its changeable/mutable.
      * @param configurable - (Optional): Set a rule whether if the property is removable or can be re-define.
      * @param enumerable - (Optional): Set a rule from the assigned property whether if its enumerable from loop methods.
      */
-    function BuildPropertyRule<K extends string, D>(key: K, data: D, mutable?: boolean, configurable?: boolean, enumerable?: boolean): Record<K, D>;
+    function BuildPropertyRule<K extends string, D>(obj: {}, key: K, data: D, mutable?: boolean, configurable?: boolean, enumerable?: boolean): void;
 
     /**
-     * Returns the build properties with set of rule for an **object**.
+     * Builds and assign a set of rules from the specified collection of **property key** and their **data**, and store
+     * them from the specified parent **object**.
      *
+     * @param obj - The parent object.
      * @param keys - The collection of property keys.
      * @param values - The collection of data to assigned from property keys collection.
      * @param mutable - (Optional): Set a rule from each assigned property value whether if its changeable/mutable.
      * @param configurable - (Optional): Set a rule from each property key whether if its removable or can be re-define.
      * @param enumerable - (Optional): Set a rule from each assigned property value whether if its enumerable from loop methods.
      */
-    function BuildPropertiesRule<K extends string, D>(keys: Array<string>, values: Array<D>, mutable?: boolean, configurable?: boolean, enumerable?: boolean): Record<K, D>;
+    function BuildPropertiesRule<K extends string, D>(obj: {}, keys: Array<K>, values: Array<D>, mutable?: boolean, configurable?: boolean, enumerable?: boolean): void;
 
     /* ===============|===============|===============|=============== */
 

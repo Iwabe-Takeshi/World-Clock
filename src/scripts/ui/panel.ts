@@ -18,10 +18,13 @@ export default function Panel() {
         state = false;
 
     // @ts-ignore
-    ComponentStates.VIEW["Panel"] = BuildPropertyRule("Block", panel, false);
+    BuildPropertyRule(ValidateObjectKey(ComponentStates.VIEW, "Panel", {}), "Block", panel, false);
 
     // @ts-ignore
-    ComponentStates.VIEW["Panel"] = BuildPropertyRule("Status", state);
+    BuildPropertyRule(ComponentStates.VIEW["Panel"], "Status", state);
+
+    // [CONTEXT]: Store panel to @Components.
+    StoreComponent("Panel", panel);
 
     return panel;
 }

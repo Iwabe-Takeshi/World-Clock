@@ -13,6 +13,15 @@ declare global {
     const App: AppConfig;
 
     /**
+     * Stores the rendered components of application.
+     */
+    const Components: {
+        [Group_Or_ComponentKey: string]: {
+            [ComponentKey: string]: Element;
+        } | Element;
+    }
+
+    /**
      * Shorter access for accessing **document**.
      *
      * usage
@@ -48,6 +57,31 @@ declare global {
             Status: boolean;
         }
     }
+
+    /**
+     * Stores the components from global variable components.
+     *
+     * @param key - The access key of component, can be either its id or custom.
+     * @param component - The live component (element) itself.
+     *
+     * @example
+     *  - StoreComponent("LoginBtn", loginBtn);
+     *    Components.LoginBtn -> HTMLButtonElement
+     *
+     * Stores the components from global variables components.
+     *
+     * @param group - The group id of grouped components.
+     * @param key - The access key of a component under the specified group id.
+     * @param component - The live component (element) itself.
+     *
+     * @example
+     *  - StoreComponent("Nav", "Home", HomeNavBtn);
+     *    Components.Nav.Home -> HTMLButtonElement
+     */
+    const StoreComponent: {
+        (key: string, component: Element): void;
+        (group: string, key: string, component: Element): void;
+    };
 
     /**
      * Handles storing of runtime tools load result states.
@@ -114,9 +148,15 @@ declare global {
     }
 
     /**
-     * Holds the active or previous page.
+     * Checks the available key-pairs at the specified **object** whether if the specified access key
+     * is existing or not, if not, it will automatically generate the key-pair with the
+     * specified given default value.
+     *
+     * @param obj - The object that contains key-pairs.
+     * @param thisKey - The access key to key-pairs at object.
+     * @param default - (Optional): Default value to bind when **@thisKey** is not found.
      */
-    var ActiveNavigationPage: Element;
+    const ValidateObjectKey: <T>(obj: { [key: string]: unknown }, key: string, defaultValue?: T) => T;
 
     /**
      * Holds the **root** element which is where the application contents being loaded.

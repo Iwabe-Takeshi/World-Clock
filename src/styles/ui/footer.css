@@ -37,29 +37,14 @@
     Footer Navigation Items Style
 */
 .foo-nav-i {
+    all: unset;
     display: grid;
     place-items: center;
     row-gap: 5px;
     min-width: 100px;
+    cursor: pointer;
     user-select: none;
 }
-
-/* > ToolTip */
-/* .foo-nav-i::before {
-    content: attr(tooltip);
-    position: absolute;
-    width: max-content;
-    padding: 5px 10px;
-    top: -15px;
-    opacity: 0;
-    font-size: 10pt;
-    letter-spacing: 1px;
-    border-radius: 5px;
-    color: var(--light-text-color);
-    background-color: rgb(60, 130, 209);
-    transition: top 500ms 200ms var(--def-cubic), opacity 500ms 200ms var(--def-cubic);
-    pointer-events: none;
-} */
 
 .foo-nav-i span {
     display: flex;

@@ -23,8 +23,8 @@ export default async function NAV(View: Element) {
     // [CONTEXT]: Generate navigation block component.
     const C_Nav = Create("nav", { ClassName: "foo-nav" });
     Mount(C_Foo, C_Nav);
-    // @ts-ignore
-    ComponentStates.NAV["Inner"] = BuildPropertiesRule(["Block", "Status"], [C_Nav, true], false, true, true);
+    BuildPropertiesRule(ValidateObjectKey(ComponentStates.NAV, "Inner", {}), ["Block", "Status"], [C_Nav, C_Nav instanceof HTMLElement], false);
+    StoreComponent("Nav", "Inner", C_Nav);
 
     // [TASK]: Load Navigation Icons.
     const IDs = [
@@ -34,7 +34,7 @@ export default async function NAV(View: Element) {
 
     for (const [Id, iconKey, title] of IDs) {
         let state = true, iconState = false, eventState = false;
-        const block = Create("i", { ClassName: "foo-nav-i", Id: `nav-${Id}` });
+        const block = Create("a", { ClassName: "foo-nav-i", Id: `nav-${Id}`, href: `#${Id}` });
         Mount(C_Nav, block);
 
         const span = Create("span", { ClassName: "nav-i-icon" });
@@ -52,18 +52,18 @@ export default async function NAV(View: Element) {
         if (iconState)
             Mount(span, iconElement);
 
-        // @ts-ignore
-        ComponentStates.NAV[Id] = BuildPropertyRule("Block", block, false);
+        BuildPropertyRule(ValidateObjectKey(ComponentStates.NAV, Id, {}), "Block", block, false);
+        BuildPropertiesRule(ComponentStates.NAV[Id], ["IsIconLoaded", "IsEventAttached", "Status"], [iconState, eventState, state]);
 
-        // @ts-ignore
-        ComponentStates.NAV[Id] = BuildPropertiesRule(["IsIconLoaded", "IsEventAttached", "Status"], [iconState, eventState, state]);
+        // [CONTEXT]: Store icon to @Components with group 'Nav'.
+        StoreComponent("Nav", Id, block);
     }
 
     // [INFO]: Checking component states at @ComponentStates.
-    for (const group of Object.keys(ComponentStates)) {
-        for (const item of Object.values(ComponentStates[group as keyof typeof ComponentStates])) {
-            if (!item.Status)
-                throw new Error(`NAV(): Failed to load component '${item.Block}'! (Exited)`);
+    for (const [group, data] of Object.entries(ComponentStates)) {
+        for (const [prop, propVal] of Object.entries(data)) {
+            if (!propVal.Status)
+                throw new Error(`NAV(): Failed to load '${group}>${prop}'! (Status: ${propVal.Status})`);
         }
     }
 }

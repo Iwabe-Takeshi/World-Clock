@@ -1,83 +1,15 @@
 /**
- * Customize name for application runtime as **window** or **globalThis**.
- */
-var Runtime = (window as any || globalThis as any);
-export default Runtime as any;
-
-/**
- * Shorter declaration of **document** or **window.document**.
- */
-const DOM = document || window.document;
-
-/**
- * Stores status of **application** runtime tools.
- *
- * @example
- *  - {
- *       // [INFO]: Successfully loaded state.
- *       "Create": {
- *          Call: Create,
- *          Status: true
- *       },
- *       "IsArray": {
- *          Call: IsArray,
- *          Status: true,
- *       },
- *       // [ERROR]: Failed to load state.
- *       "EachOf": {
- *          Call: null,
- *          Status: false,
- *       }
- *    }
- */
-const RuntimeToolStates: {
-    [runtimeKey: string]: {
-        Call: unknown,
-        Status: Boolean,
-    }
-} = {};
-
-/**
- * Handle storing of result states of loading runtime tools.
- */
-const StoreState = <T>(key: string, data: T, state: boolean): void => {
-    const entry = {};
-
-    Object.defineProperties(entry, {
-        Call: {
-            value: data,
-            writable: false,
-            configurable: false,
-            enumerable: true
-        },
-        Status: {
-            value: state,
-            writable: true,
-            configurable: false,
-            enumerable: true
-        }
-    });
-
-    Object.defineProperty(RuntimeToolStates, key, {
-        value: entry,
-        writable: false,
-        configurable: false,
-        enumerable: true
-    });
-}
-
-/**
  * Contains application's states.
  */
 const App = function (): AppConfig {
     const entries = {};
     const keys = ["ComponentsState", "EventsState", "RuntimeToolsState", "RuntimeErrorListenerState", "UpdateState", "IsReady"];
     for (const [pos, key] of keys.entries()) {
-        if (pos <= 2)
+        if (pos < (keys.length - 2))
             Object.defineProperty(entries, key, {
                 value: false,
                 writable: true,
-                configurable: false,
+                configurable: true,
                 enumerable: true
             });
         else
@@ -106,6 +38,15 @@ const App = function (): AppConfig {
 
     return (entries as AppConfig);
 }
+
+/**
+ * Stores the rendered components of application.
+ */
+const Components: {
+    [Group_Or_ComponentKey: string]: Element | {
+        [ComponentKey: string]: Element;
+    };
+} = {};
 
 /**
  * Stores application's user interface component states.
@@ -148,6 +89,122 @@ const ComponentStates: {
 } = { VIEW: {}, NAV: {} };
 
 /**
+ * Shorter declaration of **document** or **window.document**.
+ */
+const DOM = document || window.document;
+
+/**
+ * Stores status of **application** runtime tools.
+ *
+ * @example
+ *  - {
+ *       // [INFO]: Successfully loaded state.
+ *       "Create": {
+ *          Call: Create,
+ *          Status: true
+ *       },
+ *       "IsArray": {
+ *          Call: IsArray,
+ *          Status: true,
+ *       },
+ *       // [ERROR]: Failed to load state.
+ *       "EachOf": {
+ *          Call: null,
+ *          Status: false,
+ *       }
+ *    }
+ */
+const RuntimeToolStates: {
+    [runtimeKey: string]: {
+        Call: unknown,
+        Status: Boolean,
+    }
+} = {};
+
+/**
+ * Customize name for application runtime as **window** or **globalThis**.
+ */
+var Runtime = (window as any || globalThis as any);
+export default Runtime;
+
+/**
+ * Stores the component from global variable components.
+ */
+const StoreComponent = function(group: string | null | undefined, key: string, component: Element): void {
+    /* -- Validation -- */
+    const fn = "StoreComponent";
+
+    // [ERROR]: Exits when parameter @group and @key were not provided.
+    if ((group === null || group === undefined) && (key === null || key === undefined))
+        throw new Error(`${fn}(@key: ${key}): Expects a key id as access key of component from @Components!`);
+
+    // [CONTEXT]: Parameter Switching.
+    if (group && key && (component === null || component === undefined)) {
+        component = key as unknown as Element;
+        key = group;
+        group = undefined;
+    }
+
+    // [ERROR]: Exits when group or key id is invalid.
+    if (group && typeof group !== "string")
+        throw new TypeError(`${fn}(@group: non-string): Expects a string format group id!`);
+
+    if (group && key.constructor !== String)
+        throw new TypeError(`${fn}(@key: non-string): Expects a string format key id!`);
+
+    // [ERROR]: Exits when component was not provided.
+    if (component === null || component === undefined)
+        throw new Error(`${fn}(@component: ${component}): Expects a component (element) to bind at specified key id!`);
+
+    /* -- Process -- */
+
+    // [CONTEXT]: Store with group.
+    if (group) {
+        Object.defineProperty(ValidateObjectKey(Components, group, {}), key, {
+            value: component,
+            writable: false,
+            configurable: true,
+            enumerable: true
+        });
+    } else
+        Object.defineProperty(Components, key, {
+            value: component,
+            writable: false,
+            configurable: true,
+            enumerable: true
+        });
+}
+
+/**
+ * Handle storing of result states of loading runtime tools.
+ */
+const StoreState = <T>(key: string, data: T, state: boolean): void => {
+    const entry = {};
+
+    Object.defineProperties(entry, {
+        Call: {
+            value: data,
+            writable: false,
+            configurable: false,
+            enumerable: true
+        },
+        Status: {
+            value: state,
+            writable: true,
+            configurable: false,
+            enumerable: true
+        }
+    });
+
+    Object.defineProperty(RuntimeToolStates, key, {
+        value: entry,
+        writable: false,
+        configurable: false,
+        enumerable: true
+    });
+}
+
+/**
  * SVG icon paths used in this application.
  * Source: (https://fonts.google.com/icons)
  */
@@ -185,9 +242,24 @@ const SVGPaths = Object.defineProperties({}, {
 });
 
 /**
- * Holds the active or previous navigation page element.
+ * Checks the available key-pairs at the specified **object** whether if the specified access key
+ * is existing or not, if not, it will automatically generate the key-pair with the
+ * specified given default value.
  */
-var ActiveNavigationPage = undefined;
+const ValidateObjectKey = function <T>(obj: { [key: string]: unknown }, thisKey: string, defaultValue?: T) {
+    const fn = "ValidateObjectKey";
+
+    if (obj.constructor !== Object)
+        throw new TypeError(`${fn}(@obj: non-object): Expects a valid object!`);
+
+    if (thisKey.constructor !== String)
+        throw new TypeError(`${fn}(@thisKey: non-string): Expects a string access key!`);
+
+    if (obj[thisKey] === null || obj[thisKey] === undefined)
+        obj[thisKey] = defaultValue;
+
+    return obj[thisKey] as typeof defaultValue;
+}
 
 /**
  * Holds the **root** element which is where the application contents being loaded.
@@ -200,12 +272,14 @@ const View = DOM.getElementById("view") ?? DOM.body;
 (function () {
     const List = {
         "App": App(),
+        "Components": Components,
         "ComponentStates": ComponentStates,
         "DOM": DOM,
         "RuntimeToolStates": RuntimeToolStates,
+        "StoreComponent": StoreComponent,
         "StoreState": StoreState,
         "SVGPaths": SVGPaths,
-        "ActiveNavigationPage": ActiveNavigationPage,
+        "ValidateObjectKey": ValidateObjectKey,
         "View": View,
     }
 
@@ -235,4 +309,8 @@ const View = DOM.getElementById("view") ?? DOM.body;
         // [CONTEXT]: Stores state to @RuntimeToolsStates object, which can be useful when identifying which one goes wrong.
         StoreState(key, value, true);
     }
+
+    // [CONTEXT]: Store view (root) element to @Components.
+    // @ts-ignore
+    StoreComponent("Root", View);
 })();

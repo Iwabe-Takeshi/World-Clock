@@ -3,5 +3,9 @@
  */
 import "./init/init.app.js";
 
+/* -- @DefaultApplicationLocationHash -- */
+if (!location.hash)
+    location.replace("#");
+
 /* -- @InitializeApplicationRuntime -- */
 InitApp();

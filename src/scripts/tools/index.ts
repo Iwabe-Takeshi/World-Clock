@@ -182,17 +182,27 @@ export function ValuesOf<V>(arg: (({ [key: string]: V } | ArrayLike<V>) | Array<
 }
 
 /**
- * Returns the build property rule with set of rules for an **object**.
+ * Build and assign a set of rules of the specified **property key** and its **data**, and store
+ * them from the specified parent **object**.
  *
+ * @param obj - The parent object.
  * @param key - The access key of a property.
  * @param data - The data to assign at specified property key.
  * @param mutable - (Optional): Set a rule from the assigned property value whether if its changeable/mutable.
  * @param configurable - (Optional): Set a rule whether if the property is removable or can be re-define.
  * @param enumerable - (Optional): Set a rule from the assigned property whether if its enumerable from loop methods.
  */
-export function BuildPropertyRule<K extends string, D>(key: K, data: D, mutable?: boolean, configurable?: boolean, enumerable?: boolean): Record<K, D> {
+export function BuildPropertyRule<K extends string, D>(obj: {}, key: K, data: D, mutable?: boolean, configurable?: boolean, enumerable?: boolean) {
     /* -- Validation -- */
     const Emitter = NameOf(BuildPropertyRule), Targets = ["key", "data", "mutable", "configurable", "enumerable"];
+
+    // [ERROR]: Exits when parent object is not provided.
+    if (IsNullUndefined(obj))
+        $MissingParameterError(Emitter, "obj", obj);
+
+    // [ERROR]: Exits when parent object invalid.
+    if (!IsObj(obj))
+        $UnexpectedTypeError(Emitter, "obj", GetConstructorOrTypeOf(obj), "Object");
 
     // [ERROR]: Exits when there property key is not provided or invalid.
     if (IsNullUndefined(key))
@@ -208,26 +218,36 @@ export function BuildPropertyRule<K extends string, D>(key: K, data: D, mutable?
     });
 
     /* -- Process -- */
-    return Object.defineProperty({}, key, {
+    Object.defineProperty(obj, key, {
         value: data,
         writable: mutable ?? true,
         configurable: configurable ?? true,
         enumerable: enumerable ?? true
-    }) as Record<K, D>;
+    });
 }
 
 /**
- * Returns the build properties with set of rule for an **object**.
+ * Builds and assign a set of rules from the specified collection of **property key** and their **data**, and store
+ * them from the specified parent **object**.
  *
+ * @param obj - The parent object.
  * @param keys - The collection of property keys.
  * @param values - The collection of data to assigned from property keys collection.
  * @param mutable - (Optional): Set a rule from each assigned property value whether if its changeable/mutable.
  * @param configurable - (Optional): Set a rule from each property key whether if its removable or can be re-define.
  * @param enumerable - (Optional): Set a rule from each assigned property value whether if its enumerable from loop methods.
  */
-export function BuildPropertiesRule<K extends string, D>(keys: Array<K>, values: Array<D>, mutable?: boolean, configurable?: boolean, enumerable?: boolean): Record<K, D> {
+export function BuildPropertiesRule<K extends string, D>(obj: {}, keys: Array<K>, values: Array<D>, mutable?: boolean, configurable?: boolean, enumerable?: boolean) {
     /* -- Validation -- */
     const Emitter = NameOf(BuildPropertiesRule), Targets = ["keys", "values", "mutable", "configurable", "enumerable"], P = [keys, values];
+
+    // [ERROR]: Exits when parent object is not provided.
+    if (IsNullUndefined(obj))
+        $MissingParameterError(Emitter, "obj", obj);
+
+    // [ERROR]: Exits when parent object invalid.
+    if (!IsObj(obj))
+        $UnexpectedTypeError(Emitter, "obj", GetConstructorOrTypeOf(obj), "Object");
 
     // [ERROR]: Exits when parameter @keys and @values are invalid.
     EachOf(P, (data, pos) => {
@@ -255,7 +275,6 @@ export function BuildPropertiesRule<K extends string, D>(keys: Array<K>, values:
     });
 
     /* -- Process -- */
-    const result = {};
     for (const [pos, key] of keys.entries()) {
         // [WARNING]: Skips and warn non-string key.
         if (!IsString(key)) {
@@ -263,15 +282,13 @@ export function BuildPropertiesRule<K extends string, D>(keys: Array<K>, values:
             continue;
         }
 
-        Object.defineProperty(result, key, {
+        Object.defineProperty(obj, key, {
             value: values[pos],
             writable: mutable ?? true,
             configurable: configurable ?? true,
             enumerable: enumerable ?? true,
         });
     }
-
-    return result as Record<K, D>;
 }
 
 /**
@@ -280,8 +297,6 @@ export function BuildPropertiesRule<K extends string, D>(keys: Array<K>, values:
 export async function Delay(ms: number): Promise<unknown> {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-// export const Delay = (ms: number): Promise<unknown> =>
-    // new Promise(resolve => setTimeout(resolve, ms));
 
 /**
  * Writes a static debug message outputs to console.

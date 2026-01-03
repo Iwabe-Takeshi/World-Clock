@@ -126,7 +126,7 @@ declare global {
                 IsEventAttached: boolean;
                 Status: boolean;
             }
-        },
+        };
         VIEW: {
             [ComponentKey: string]: {
                 Block: Element;
@@ -140,11 +140,12 @@ declare global {
      * Source: (https://fonts.google.com/icons)
      */
     const SVGPaths: {
-        Settings: string,
-        Clock: string,
-        Home: string,
-        Book: string,
-        Apps: string,
+        Apps: string;
+        Book: string;
+        Clock: string;
+        Home: string;
+        Settings: string;
+        UnknownDocument: string;
     }
 
     /**

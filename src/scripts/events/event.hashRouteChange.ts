@@ -8,5 +8,6 @@ import Runtime from '../variables/global.js';
 export default async function InitWindowHashChangeEvent() {
     (Runtime as Window || globalThis).addEventListener("hashchange", (event) => {
         const HashKey = event.newURL.split('#')[1];
+        
     });
 }

@@ -18,3 +18,12 @@
     transition: fill 250ms 100ms var(--def-cubic);
     fill: var(--active-theme-icon-light);
 }
+
+/*
+    Page Not Found > Action
+*/
+.page-not-found-action:hover {
+    text-decoration: none;
+    color: tomato;
+    cursor: pointer;
+}

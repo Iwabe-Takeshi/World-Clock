@@ -19,3 +19,12 @@
     font-weight: 600;
     opacity: 1;
 }
+
+/*
+    Page Not Found > Action
+*/
+.page-not-found-action:active {
+    scale: 0.95;
+    text-decoration: none;
+    color: rgb(170, 170, 170);
+}
